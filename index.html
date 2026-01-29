@@ -1,0 +1,2519 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GamesOnCro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&amp;family=Orbitron:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    * {
+      font-family: 'Rajdhani', sans-serif;
+    }
+    
+    .logo-font {
+      font-family: 'Orbitron', sans-serif;
+    }
+    
+    .glass-nav {
+      background: rgba(20, 20, 25, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),
+                  inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-item {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .nav-item:hover {
+      transform: translateY(-2px);
+    }
+    
+    .nav-item.active {
+      color: #ef4444;
+    }
+    
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      background: #ef4444;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #ef4444, 0 0 20px #ef4444;
+    }
+    
+    .game-card {
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: linear-gradient(145deg, rgba(30, 30, 35, 0.9), rgba(20, 20, 25, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .game-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(239, 68, 68, 0.2),
+                  0 0 60px rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+    
+    .red-glow {
+      text-shadow: 0 0 20px rgba(239, 68, 68, 0.5),
+                   0 0 40px rgba(239, 68, 68, 0.3);
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .scrollbar-hide {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    .genre-chip {
+      transition: all 0.2s ease;
+    }
+    
+    .genre-chip:hover, .genre-chip.active {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.5);
+      color: #ef4444;
+    }
+    
+    .pulse-dot {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .icon-btn {
+      transition: all 0.2s ease;
+    }
+    
+    .icon-btn:hover {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+    
+    .modal-overlay {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(8px);
+    }
+    
+    .modal-content {
+      background: linear-gradient(145deg, rgba(30, 30, 35, 0.98), rgba(15, 15, 20, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="h-full bg-[#0a0a0c] text-white overflow-auto">
+  <div id="app" class="h-full w-full flex flex-col"><!-- Top Header -->
+   <header class="flex-shrink-0 flex items-center justify-between px-4 sm:px-6 py-4 sm:py-5 bg-[#0a0a0c]/90 backdrop-blur-sm border-b border-white/5 sticky top-0 z-40"><button id="logo-btn" class="logo-font text-2xl sm:text-3xl font-bold tracking-wider cursor-pointer hover:opacity-80 transition-opacity"> <span class="text-red-500 red-glow">GamesOn</span><span class="text-white">Cro</span> </button>
+    <div class="flex items-center gap-1.5"><button id="info-btn" class="icon-btn w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-gray-400" aria-label="Information">
+      <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg></button> <button id="settings-btn" class="icon-btn w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-gray-400" aria-label="Settings">
+      <svg class="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg></button> <button id="profile-btn" class="icon-btn w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-red-500/20 to-red-700/20 border border-red-500/30 flex items-center justify-center overflow-hidden" aria-label="Profile">
+      <svg id="profile-btn-icon" class="w-6 h-6 sm:w-7 sm:h-7 text-red-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+      </svg><img id="profile-btn-img" class="w-full h-full object-cover hidden" alt="Profile" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.classList.add('hidden'); document.getElementById('profile-btn-icon').classList.remove('hidden');"> </button>
+    </div>
+   </header><!-- Main Content Area -->
+   <main id="main-content" class="flex-1 overflow-auto scrollbar-hide pb-24"><!-- Home Page -->
+    <div id="page-home" class="page fade-in p-4 space-y-6">
+     <div class="space-y-1">
+      <h1 id="welcome-msg" class="text-2xl font-bold">Welcome back, Player</h1>
+      <p class="text-gray-500 text-sm">Discover the best GameFi on Cronos</p>
+     </div><!-- Featured Section -->
+     <section>
+      <h2 id="featured-title" class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 flex items-center gap-2"><span class="w-1 h-5 bg-red-500 rounded-full"></span> Featured Games</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+       <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="spacewar-x">
+        <div class="aspect-video bg-gradient-to-br from-indigo-900/50 to-purple-900/50 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/1X1vKQFJ/IMG-0023.jpg" alt="SpaceWar-X" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-4xl sm:text-5xl\'>🚀</span>';">
+        </div>
+        <div class="p-3 sm:p-4">
+         <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded-full">F2P</span> <span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+         </div>
+         <h3 class="font-semibold text-sm sm:text-base">SpaceWar-X</h3>
+         <p class="text-xs sm:text-sm text-gray-500">Retro • Shooter</p>
+        </div>
+       </div>
+       <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="green-candles">
+        <div class="aspect-video bg-gradient-to-br from-green-900/50 to-emerald-900/50 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/FHXD5mny/IMG-0053.jpg" alt="Green Candles" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-4xl sm:text-5xl\'>������️</span>';">
+        </div>
+        <div class="p-3 sm:p-4">
+         <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded-full">F2P</span> <span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+         </div>
+         <h3 class="font-semibold text-sm sm:text-base">Green Candles</h3>
+         <p class="text-xs sm:text-sm text-gray-500">Retro • Arcade</p>
+        </div>
+       </div>
+      </div>
+     </section><!-- Trending Section -->
+     <section>
+      <h2 class="text-lg font-semibold mb-3 flex items-center gap-2"><span class="w-1 h-5 bg-red-500 rounded-full"></span> Trending Now</h2>
+      <div id="trending-container" class="space-y-2"><!-- Trending games will be populated dynamically -->
+      </div>
+     </section>
+    </div><!-- Rocket Page (Placeholder) -->
+    <div id="page-rocket" class="page hidden fade-in p-4 flex flex-col items-center justify-center min-h-[60%]">
+     <div class="text-center space-y-4">
+      <div class="w-24 h-24 rounded-full bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center mx-auto"><span class="text-5xl">🚀</span>
+      </div>
+      <h2 class="text-2xl font-bold">Coming Soon</h2>
+      <p class="text-gray-500 max-w-xs">Something exciting is launching here. Stay tuned for updates!</p>
+     </div>
+    </div><!-- Games Library Page -->
+    <div id="page-games" class="page hidden fade-in p-4 space-y-4">
+     <h1 class="text-2xl font-bold">Games Library</h1><!-- Filter Toggle -->
+     <div class="flex gap-2"><button id="filter-all" class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-red-500/20 text-red-400 border border-red-500/30">All Games</button> <button id="filter-f2p" class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white/5 text-gray-400 border border-white/10">Free to Play</button> <button id="filter-p2e" class="filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white/5 text-gray-400 border border-white/10">Pay to Earn</button>
+     </div><!-- Genre Chips -->
+     <div class="flex gap-2 overflow-x-auto scrollbar-hide pb-2"><button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap active">All</button> <button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap">Retro</button> <button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap">Shooter</button> <button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap">RPG</button> <button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap">Strategy</button> <button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap">Racing</button> <button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap">Card Games</button> <button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap">PvP</button> <button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap">Simulation</button> <button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap">Arcade</button> <button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap">Tap Game</button> <button class="genre-chip px-3 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 whitespace-nowrap">Territory Control</button>
+     </div><!-- Games Grid -->
+     <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="spacewar-x">
+       <div class="aspect-video bg-gradient-to-br from-indigo-900/50 to-purple-900/50 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/1X1vKQFJ/IMG-0023.jpg" alt="SpaceWar-X" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-4xl\'>🚀</span>';">
+       </div>
+       <div class="p-3">
+        <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded-full">F2P</span> <span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+        </div>
+        <h3 class="font-semibold text-sm">SpaceWar-X</h3>
+        <p class="text-xs text-gray-500">Retro • Shooter</p>
+       </div>
+      </div>
+      <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="green-candles">
+       <div class="aspect-video bg-gradient-to-br from-green-900/50 to-emerald-900/50 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/FHXD5mny/IMG-0053.jpg" alt="Green Candles" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-4xl\'>🕊�����������</span>';">
+       </div>
+       <div class="p-3">
+        <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded-full">F2P</span> <span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+        </div>
+        <h3 class="font-semibold text-sm">Green Candles</h3>
+        <p class="text-xs text-gray-500">Retro • Arcade</p>
+       </div>
+      </div>
+      <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="dbd-fantasy">
+       <div class="aspect-video bg-gradient-to-br from-orange-900/50 to-red-900/50 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/DwFMfBhw/IMG-0060.png" alt="DBD Fantasy Football" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-4xl\'>������</span>';">
+       </div>
+       <div class="p-3">
+        <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+        </div>
+        <h3 class="font-semibold text-sm">DBD Fantasy Football</h3>
+        <p class="text-xs text-gray-500">Strategy</p>
+       </div>
+      </div>
+      <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="cronos-army">
+       <div class="aspect-video bg-gradient-to-br from-slate-900/50 to-gray-900/50 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/x1jpn1r6/IMG-0061.jpg" alt="Cronos Army" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-4xl\'>�����️</span>';">
+       </div>
+       <div class="p-3">
+        <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded-full">F2P</span> <span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+        </div>
+        <h3 class="font-semibold text-sm">Cronos Army</h3>
+        <p class="text-xs text-gray-500">Strategy • Territory Control</p>
+       </div>
+      </div>
+      <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="ryoshi-dynasty">
+       <div class="aspect-video bg-gradient-to-br from-red-900/50 to-orange-900/50 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/B6n9wfsz/IMG-0065.jpg" alt="Ryoshi Dynasty" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-4xl\'>🏯</span>';">
+       </div>
+       <div class="p-3">
+        <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+        </div>
+        <h3 class="font-semibold text-sm">Ryoshi Dynasty</h3>
+        <p class="text-xs text-gray-500">Strategy • PvP • Territory Control</p>
+       </div>
+      </div>
+      <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="chiverse">
+       <div class="aspect-video bg-gradient-to-br from-blue-900/50 to-cyan-900/50 flex items-center justify-center"><span class="text-4xl">🐋</span>
+       </div>
+       <div class="p-3">
+        <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded-full">F2P</span>
+        </div>
+        <h3 class="font-semibold text-sm">Chiverse</h3>
+        <p class="text-xs text-gray-500">Adventure</p>
+       </div>
+      </div>
+      <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="mane-city">
+       <div class="aspect-video bg-gradient-to-br from-yellow-900/50 to-amber-900/50 flex items-center justify-center"><span class="text-4xl">🦁</span>
+       </div>
+       <div class="p-3">
+        <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+        </div>
+        <h3 class="font-semibold text-sm">Mane City</h3>
+        <p class="text-xs text-gray-500">Simulation</p>
+       </div>
+      </div>
+      <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="crooks-empire">
+       <div class="aspect-video bg-gradient-to-br from-purple-900/50 to-indigo-900/50 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/vB0qtnCR/IMG-0070.jpg" alt="Crooks Empire" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-4xl\'>💰</span>';">
+       </div>
+       <div class="p-3">
+        <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded-full">F2P</span> <span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+        </div>
+        <h3 class="font-semibold text-sm">Crooks Empire</h3>
+        <p class="text-xs text-gray-500">Strategy • RPG • Arcade</p>
+       </div>
+      </div>
+      <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="ryoshi-royale">
+       <div class="aspect-video bg-gradient-to-br from-pink-900/50 to-rose-900/50 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/FRR74qNQ/IMG-0062.png" alt="Ryoshi Royale" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-4xl\'>���</span>';">
+       </div>
+       <div class="p-3">
+        <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+        </div>
+        <h3 class="font-semibold text-sm">Ryoshi Royale</h3>
+        <p class="text-xs text-gray-500">PvP • Strategy</p>
+       </div>
+      </div>
+      <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="insect-frenzy">
+       <div class="aspect-video bg-gradient-to-br from-lime-900/50 to-green-900/50 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/PxxzR27C/IMG-0063.jpg" alt="Insect Frenzy" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-4xl\'>🐛</span>';">
+       </div>
+       <div class="p-3">
+        <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded-full">F2P</span> <span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+        </div>
+        <h3 class="font-semibold text-sm">Insect Frenzy</h3>
+        <p class="text-xs text-gray-500">Retro • Arcade • Tap Game</p>
+       </div>
+      </div>
+      <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="fury-brawl">
+       <div class="aspect-video bg-gradient-to-br from-red-900/50 to-crimson-900/50 flex items-center justify-center"><span class="text-4xl">🥊</span>
+       </div>
+       <div class="p-3">
+        <div class="flex items-center gap-2 mb-1 flex-wrap"><span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+        </div>
+        <h3 class="font-semibold text-sm">Fury Brawl</h3>
+        <p class="text-xs text-gray-500">Fighting</p>
+       </div>
+      </div>
+     </div>
+    </div><!-- News Page -->
+    <div id="page-news" class="page hidden fade-in p-4 space-y-4">
+     <h1 class="text-2xl font-bold">News &amp; Updates</h1>
+     <div class="space-y-3">
+      <article class="game-card rounded-xl p-4 space-y-2">
+       <div class="flex items-center gap-2 text-xs text-gray-500"><span class="w-2 h-2 bg-red-500 rounded-full"></span> <span>Today</span>
+       </div>
+       <h3 class="font-semibold">New Game Launch: Cronos Quest v2.0</h3>
+       <p class="text-sm text-gray-400">The highly anticipated sequel is now live with new dungeons, improved tokenomics, and cross-chain compatibility.</p>
+      </article>
+      <article class="game-card rounded-xl p-4 space-y-2">
+       <div class="flex items-center gap-2 text-xs text-gray-500"><span class="w-2 h-2 bg-gray-500 rounded-full"></span> <span>2 days ago</span>
+       </div>
+       <h3 class="font-semibold">Battle Arena Tournament Announced</h3>
+       <p class="text-sm text-gray-400">$50,000 CRO prize pool for the upcoming PvP championship. Registration opens next week.</p>
+      </article>
+      <article class="game-card rounded-xl p-4 space-y-2">
+       <div class="flex items-center gap-2 text-xs text-gray-500"><span class="w-2 h-2 bg-gray-500 rounded-full"></span> <span>1 week ago</span>
+       </div>
+       <h3 class="font-semibold">Platform Update: Enhanced Wallet Integration</h3>
+       <p class="text-sm text-gray-400">We've improved our wallet connection flow with support for Crypto.com DeFi Wallet and MetaMask.</p>
+      </article>
+      <article class="game-card rounded-xl p-4 space-y-2">
+       <div class="flex items-center gap-2 text-xs text-gray-500"><span class="w-2 h-2 bg-gray-500 rounded-full"></span> <span>2 weeks ago</span>
+       </div>
+       <h3 class="font-semibold">Community AMA Recap</h3>
+       <p class="text-sm text-gray-400">Missed our live AMA? Here's everything we discussed about upcoming features and partnerships.</p>
+      </article>
+     </div>
+    </div><!-- Search Page -->
+    <div id="page-search" class="page hidden fade-in p-4 space-y-4">
+     <div class="relative"><input type="text" id="search-input" placeholder="Search games, genres, news..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 pl-12 text-sm placeholder-gray-500 focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50">
+      <svg class="w-5 h-5 text-gray-500 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+     </div>
+     <div id="popular-searches">
+      <h3 class="text-sm font-medium text-gray-500 mb-2">Popular Searches</h3>
+      <div class="flex flex-wrap gap-2"><span class="popular-search-chip px-3 py-1.5 rounded-full text-xs bg-white/5 border border-white/10 cursor-pointer hover:border-red-500/30 hover:text-red-400 transition-colors">RPG games</span> <span class="popular-search-chip px-3 py-1.5 rounded-full text-xs bg-white/5 border border-white/10 cursor-pointer hover:border-red-500/30 hover:text-red-400 transition-colors">Free to play</span> <span class="popular-search-chip px-3 py-1.5 rounded-full text-xs bg-white/5 border border-white/10 cursor-pointer hover:border-red-500/30 hover:text-red-400 transition-colors">NFT rewards</span> <span class="popular-search-chip px-3 py-1.5 rounded-full text-xs bg-white/5 border border-white/10 cursor-pointer hover:border-red-500/30 hover:text-red-400 transition-colors">PvP</span> <span class="popular-search-chip px-3 py-1.5 rounded-full text-xs bg-white/5 border border-white/10 cursor-pointer hover:border-red-500/30 hover:text-red-400 transition-colors">Tournaments</span> <span class="popular-search-chip px-3 py-1.5 rounded-full text-xs bg-white/5 border border-white/10 cursor-pointer hover:border-red-500/30 hover:text-red-400 transition-colors">Strategy</span> <span class="popular-search-chip px-3 py-1.5 rounded-full text-xs bg-white/5 border border-white/10 cursor-pointer hover:border-red-500/30 hover:text-red-400 transition-colors">Arcade</span>
+      </div>
+     </div>
+     <div id="search-results" class="space-y-3 hidden">
+      <h3 class="text-sm font-medium text-gray-500">Results</h3>
+      <div id="search-results-container"></div>
+     </div>
+    </div>
+   </main><!-- Floating Glass Bottom Navigation -->
+   <nav class="fixed bottom-3 left-3 right-3 z-50 pb-safe">
+    <div class="glass-nav rounded-2xl px-2 sm:px-3 py-3 sm:py-2 flex items-center justify-around max-w-2xl mx-auto"><button class="nav-item relative flex flex-col items-center justify-center w-16 h-14 sm:w-14 sm:h-12 rounded-xl active" data-page="home" aria-label="Home">
+      <svg class="w-7 h-7 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+      </svg></button> <button class="nav-item relative flex flex-col items-center justify-center w-16 h-14 sm:w-14 sm:h-12 rounded-xl text-gray-500" data-page="rocket" aria-label="Launch">
+      <svg class="w-7 h-7 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.59 14.37a6 6 0 01-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 006.16-12.12A14.98 14.98 0 009.631 8.41m5.96 5.96a14.926 14.926 0 01-5.841 2.58m-.119-8.54a6 6 0 00-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 00-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 01-2.448-2.448 14.9 14.9 0 01.06-.312m-2.24 2.39a4.493 4.493 0 00-1.757 4.306 4.493 4.493 0 004.306-1.758M16.5 9a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
+      </svg></button> <button class="nav-item relative flex flex-col items-center justify-center w-16 h-14 sm:w-14 sm:h-12 rounded-xl text-gray-500" data-page="games" aria-label="Games">
+      <svg class="w-7 h-7 sm:w-6 sm:h-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewbox="0 0 24 24"><path d="M6 11h4" /> <path d="M8 9v4" /> <circle cx="15" cy="9" r="1" /> <circle cx="18" cy="12" r="1" /> <path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z" />
+      </svg></button> <button class="nav-item relative flex flex-col items-center justify-center w-16 h-14 sm:w-14 sm:h-12 rounded-xl text-gray-500" data-page="news" aria-label="News">
+      <svg class="w-7 h-7 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+      </svg></button> <button class="nav-item relative flex flex-col items-center justify-center w-16 h-14 sm:w-14 sm:h-12 rounded-xl text-gray-500" data-page="search" aria-label="Search">
+      <svg class="w-7 h-7 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg></button>
+    </div>
+   </nav><!-- Settings Modal -->
+   <div id="settings-modal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" id="settings-overlay"></div>
+    <div class="modal-content absolute bottom-0 left-0 right-0 rounded-t-3xl p-6 space-y-4 max-h-[80%] overflow-auto">
+     <div class="flex items-center justify-between">
+      <h2 id="settings-header" class="text-xl font-bold select-none">Settings</h2><button id="close-settings" class="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-gray-400">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div>
+     <div class="space-y-3">
+      <div class="flex items-center justify-between p-3 rounded-xl bg-white/5"><span>Dark Mode</span> <button id="dark-mode-toggle" class="w-12 h-6 bg-red-500 rounded-full relative transition-colors">
+        <div class="w-5 h-5 bg-white rounded-full absolute top-0.5 shadow transition-transform" style="right: 2px;"></div></button>
+      </div>
+      <div class="flex items-center justify-between p-3 rounded-xl bg-white/5"><span>Notifications</span> <button id="notif-toggle" class="w-12 h-6 bg-gray-600 rounded-full relative transition-colors">
+        <div class="w-5 h-5 bg-white rounded-full absolute left-0.5 top-0.5 shadow transition-transform"></div></button>
+      </div>
+      <div class="flex items-center justify-between p-3 rounded-xl bg-white/5"><span>Language</span> <button id="language-toggle" class="px-4 py-1.5 rounded-full bg-red-500/20 text-red-400 border border-red-500/30 text-sm font-medium transition-colors"> English </button>
+      </div><!-- Admin Buttons (Hidden by default) -->
+      <div id="admin-buttons" class="hidden space-y-3 pt-2 border-t border-red-500/30"><button id="submit-news-btn" class="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 hover:bg-red-500/30 transition-all">
+        <div class="flex items-center gap-2"><span class="text-xl">📰</span> <span class="font-medium">Submit News</span>
+        </div>
+        <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg></button> <button id="featured-games-btn" class="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 hover:bg-red-500/30 transition-all">
+        <div class="flex items-center gap-2"><span class="text-xl">⭐</span> <span class="font-medium">Featured Games</span>
+        </div>
+        <svg class="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg></button>
+      </div>
+     </div>
+     <div class="pt-4 border-t border-white/10">
+      <p class="text-xs text-gray-500 text-center">GamesOnCro v1.0.0</p>
+     </div>
+    </div>
+   </div><!-- Sign In Modal -->
+   <div id="signin-modal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" id="signin-overlay"></div>
+    <div class="modal-content absolute bottom-0 left-0 right-0 rounded-t-3xl p-6 space-y-4">
+     <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold">Sign In</h2><button id="close-signin" class="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-gray-400">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div>
+     <form id="signin-form" class="space-y-4">
+      <div><label for="signin-username" class="block text-sm font-medium mb-2">Username</label> <input type="text" id="signin-username" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50" placeholder="PlayerOne">
+      </div>
+      <div><label for="signin-pin" class="block text-sm font-medium mb-2">PIN (4 digits)</label> <input type="password" id="signin-pin" required pattern="[0-9]{4}" maxlength="4" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 tracking-widest text-center text-2xl" placeholder="��•••">
+      </div>
+      <div id="signin-error" class="text-red-500 text-sm hidden"></div><button type="submit" id="signin-submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 font-semibold hover:opacity-90 transition-opacity"> Sign In </button>
+     </form>
+    </div>
+   </div><!-- Create Account Modal -->
+   <div id="create-account-modal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" id="create-overlay"></div>
+    <div class="modal-content absolute bottom-0 left-0 right-0 rounded-t-3xl p-6 space-y-4">
+     <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold">Create Account</h2><button id="close-create" class="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-gray-400">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div>
+     <form id="create-account-form" class="space-y-4">
+      <div><label for="create-username" class="block text-sm font-medium mb-2">Username</label> <input type="text" id="create-username" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50" placeholder="PlayerOne">
+      </div>
+      <div><label for="create-pin" class="block text-sm font-medium mb-2">PIN (4 digits)</label> <input type="password" id="create-pin" required pattern="[0-9]{4}" maxlength="4" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 tracking-widest text-center text-2xl" placeholder="••••">
+      </div>
+      <div><label for="create-pin-confirm" class="block text-sm font-medium mb-2">Confirm PIN</label> <input type="password" id="create-pin-confirm" required pattern="[0-9]{4}" maxlength="4" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50 tracking-widest text-center text-2xl" placeholder="••��•">
+      </div>
+      <div id="create-error" class="text-red-500 text-sm hidden"></div><button type="submit" id="create-submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 font-semibold hover:opacity-90 transition-opacity"> Create Account </button>
+     </form>
+    </div>
+   </div><!-- Profile Modal -->
+   <div id="profile-modal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" id="profile-overlay"></div>
+    <div class="modal-content absolute bottom-0 left-0 right-0 rounded-t-3xl p-6 space-y-4 max-h-[80%] overflow-auto"><!-- Profile View -->
+     <div id="profile-view">
+      <div class="flex items-center justify-between">
+       <h2 class="text-xl font-bold">Profile</h2><button id="close-profile" class="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-gray-400">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg></button>
+      </div>
+      <div class="text-center py-4">
+       <div id="profile-picture-container" class="w-20 h-20 rounded-full bg-gradient-to-br from-red-500/30 to-orange-500/30 border-2 border-red-500/50 flex items-center justify-center mx-auto mb-3 cursor-pointer hover:opacity-80 transition-opacity overflow-hidden" title="Click to change profile picture">
+        <svg id="profile-picture-emoji" class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg><img id="profile-picture-img" class="w-full h-full object-cover hidden" alt="Profile picture" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.classList.add('hidden'); document.getElementById('profile-picture-emoji').classList.remove('hidden');">
+       </div>
+       <h3 id="profile-username" class="font-bold text-lg">Guest Player</h3>
+       <p id="profile-email" class="text-sm text-gray-500">Create an account to get started</p>
+      </div>
+      <div id="auth-buttons" class="flex gap-3"><button id="signin-btn" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 font-semibold hover:opacity-90 transition-opacity"> Sign In </button> <button id="create-account-btn" class="flex-1 py-3 rounded-xl bg-white/10 border border-white/20 font-semibold hover:bg-white/15 transition-all"> Create Account </button>
+      </div><button id="signout-btn" class="w-full py-3 rounded-xl bg-white/10 border border-white/20 font-semibold hover:bg-white/15 transition-all hidden"> Sign Out </button>
+      <div class="space-y-2 pt-4"><button id="favorite-games-btn" class="w-full flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all"> <span class="text-gray-400">Favorite Games</span>
+        <div class="flex items-center gap-2"><span class="font-semibold" id="favorite-count">0</span>
+         <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+         </svg>
+        </div></button>
+       <div class="flex items-center justify-between p-3 rounded-xl bg-white/5"><span class="text-gray-400">Achievements</span> <span class="font-semibold" id="achievements-count">0</span>
+       </div>
+       <div class="flex items-center justify-between p-3 rounded-xl bg-white/5"><span class="text-gray-400">CRO Earned</span> <span class="font-semibold" id="cro-earned">0.00</span>
+       </div>
+      </div>
+     </div><!-- Favorites View -->
+     <div id="favorites-view" class="hidden">
+      <div class="flex items-center gap-3 mb-4"><button id="back-to-profile" class="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-gray-400 hover:text-red-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg></button>
+       <h2 class="text-xl font-bold">Favorite Games</h2>
+      </div>
+      <div id="favorites-grid" class="grid grid-cols-2 gap-3">
+       <div class="text-center py-8 col-span-2 text-gray-500">
+        <p>No favorite games yet</p>
+        <p class="text-sm mt-1">Click the heart on games to add them here</p>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Game Detail Modal -->
+   <div id="game-detail-modal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" id="game-detail-overlay"></div>
+    <div class="modal-content absolute bottom-0 left-0 right-0 rounded-t-3xl p-6 space-y-4 max-h-[85%] overflow-auto">
+     <div class="flex items-center justify-between">
+      <h2 id="game-detail-title" class="text-2xl font-bold">Game Title</h2><button id="close-game-detail" class="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-gray-400">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div><!-- Game Hero -->
+     <div id="game-detail-hero" class="aspect-video rounded-xl bg-gradient-to-br from-purple-900/50 to-blue-900/50 flex items-center justify-center"><span class="text-6xl">🎮</span>
+     </div><!-- Tags & Stats -->
+     <div class="flex items-center gap-2 flex-wrap" id="game-detail-tags"><span class="px-3 py-1 text-xs bg-green-500/20 text-green-400 rounded-full">F2P</span> <span class="px-3 py-1 text-xs bg-red-500/20 text-red-400 rounded-full">RPG</span> <span class="px-3 py-1 text-xs bg-white/10 text-gray-300 rounded-full">⭐ 4.8</span> <span class="px-3 py-1 text-xs bg-white/10 text-gray-300 rounded-full">👥 2.5K playing</span>
+     </div><!-- Description -->
+     <div class="space-y-2">
+      <h3 class="font-semibold text-lg">About</h3>
+      <p id="game-detail-description" class="text-sm text-gray-400 leading-relaxed">Embark on an epic adventure through the Cronos blockchain. Battle monsters, collect rare NFTs, and earn CRO tokens as you progress through challenging dungeons and quests.</p>
+     </div><!-- Features -->
+     <div class="space-y-2">
+      <h3 class="font-semibold text-lg">Features</h3>
+      <ul id="game-detail-features" class="space-y-2 text-sm text-gray-400">
+       <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">�����</span> <span>Play-to-earn mechanics with CRO rewards</span></li>
+       <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">���</span> <span>Collectible NFT characters and items</span></li>
+       <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">✓</span> <span>Cross-chain compatibility</span></li>
+       <li class="flex items-start gap-2"><span class="text-red-500 mt-0.5">✓</span> <span>Regular updates and new content</span></li>
+      </ul>
+     </div><!-- Rewards Info -->
+     <div class="bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 rounded-xl p-4">
+      <div class="flex items-center gap-2 mb-2"><span class="text-xl">💰</span>
+       <h3 class="font-semibold">Earning Potential</h3>
+      </div>
+      <p id="game-detail-earnings" class="text-sm text-gray-400">Players can earn between 5-50 CRO daily through quests, battles, and trading NFT items on the marketplace.</p>
+     </div><!-- Action Buttons -->
+     <div class="flex gap-3 pt-2"><button id="play-now-btn" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 font-semibold hover:opacity-90 transition-opacity"> Play Now </button> <button id="favorite-heart-btn" class="w-14 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center hover:bg-white/15 transition-all">
+       <svg id="heart-icon" class="w-5 h-5 transition-all" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+       </svg></button>
+     </div>
+    </div>
+   </div><!-- Profile Picture Modal -->
+   <div id="profile-picture-modal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" id="profile-picture-overlay"></div>
+    <div class="modal-content absolute bottom-0 left-0 right-0 rounded-t-3xl p-6 space-y-4">
+     <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold">Change Profile Picture</h2><button id="close-profile-picture" class="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-gray-400">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div>
+     <form id="profile-picture-form" class="space-y-4">
+      <div><label for="profile-picture-url" class="block text-sm font-medium mb-2">Image URL</label> <input type="url" id="profile-picture-url" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50" placeholder="https://example.com/image.jpg">
+       <p class="text-xs text-gray-500 mt-2">Enter a direct link to your profile picture</p>
+      </div>
+      <div id="profile-picture-error" class="text-red-500 text-sm hidden"></div>
+      <div class="flex gap-3"><button type="button" id="remove-profile-picture" class="flex-1 py-3 rounded-xl bg-white/10 border border-white/20 font-semibold hover:bg-white/15 transition-all"> Remove Picture </button> <button type="submit" id="profile-picture-submit" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 font-semibold hover:opacity-90 transition-opacity"> Save </button>
+      </div>
+     </form>
+    </div>
+   </div><!-- Admin News Management Modal -->
+   <div id="admin-news-modal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" id="admin-news-overlay"></div>
+    <div class="modal-content absolute bottom-0 left-0 right-0 rounded-t-3xl p-6 space-y-4 max-h-[85%] overflow-auto">
+     <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold">📰 News Management</h2><button id="close-admin-news" class="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-gray-400">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div><!-- Add News Form -->
+     <form id="add-news-form" class="space-y-3 p-4 rounded-xl bg-white/5 border border-white/10">
+      <h3 class="font-semibold">Add New News Item</h3>
+      <div><label for="news-title" class="block text-sm font-medium mb-2">Title</label> <input type="text" id="news-title" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50" placeholder="New Game Launch: Cronos Quest v2.0">
+      </div>
+      <div><label for="news-description" class="block text-sm font-medium mb-2">Description</label> <textarea id="news-description" required rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50" placeholder="The highly anticipated sequel is now live..."></textarea>
+      </div>
+      <div><label for="news-link" class="block text-sm font-medium mb-2">Link (optional)</label> <input type="url" id="news-link" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50" placeholder="https://x.com/yourpost">
+      </div>
+      <div><label for="news-date" class="block text-sm font-medium mb-2">Date (optional - leave blank for "Just Now")</label> <input type="datetime-local" id="news-date" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50">
+       <p class="text-xs text-gray-500 mt-1">Leave empty to show "Just Now"</p>
+      </div>
+      <div id="add-news-error" class="text-red-500 text-sm hidden"></div><button type="submit" id="add-news-submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 font-semibold hover:opacity-90 transition-opacity"> Publish News </button>
+     </form><!-- Existing News List -->
+     <div class="space-y-2">
+      <h3 class="font-semibold">Published News</h3>
+      <div id="admin-news-list" class="space-y-2">
+       <div class="text-center py-4 text-gray-500 text-sm">
+        No news items yet
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Information Modal -->
+   <div id="info-modal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" id="info-overlay"></div>
+    <div class="modal-content absolute bottom-0 left-0 right-0 rounded-t-3xl p-6 space-y-6 max-h-[85%] overflow-auto">
+     <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold">Information</h2><button id="close-info" class="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-gray-400">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div><!-- Information Section -->
+     <div class="space-y-4 pb-4 border-b border-white/10">
+      <h3 class="text-lg font-semibold text-red-400">About</h3><!-- Powered By --> <a href="https://x.com/Cr00tsNFT" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
+       <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 overflow-hidden"><img src="https://i.postimg.cc/d0wQjffq/Copie-de-Cr00ts-X.jpg" alt="Cr00ts Logo" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-xl\'>🚀</span>';">
+       </div>
+       <div class="flex-1 min-w-0">
+        <p class="text-sm text-gray-400">Powered by</p>
+        <p class="font-semibold">@Cr00tsNFT</p>
+       </div>
+       <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+       </svg></a> <!-- Follow Us --> <a href="https://x.com/GamesOnCro" target="_blank" rel="noopener noreferrer" class="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
+       <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 overflow-hidden"><img src="https://i.postimg.cc/brsw22B2/Copie-de-Cr00ts-X.png" alt="GamesOnCro Logo" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<svg class=\'w-5 h-5\' fill=\'currentColor\' viewBox=\'0 0 24 24\'><path d=\'M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z\'/></svg>';">
+       </div>
+       <div class="flex-1 min-w-0">
+        <p class="text-sm text-gray-400">Follow us on X</p>
+        <p class="font-semibold">@GamesOnCro</p>
+       </div>
+       <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+       </svg></a>
+     </div><!-- Team Section -->
+     <div class="space-y-4">
+      <h3 class="text-lg font-semibold text-red-400">Team Members</h3>
+      <div class="grid grid-cols-2 gap-4"><!-- Web-App Dev --> <a href="https://x.com/DreamQc" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center space-y-2 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
+        <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-red-500/20 to-orange-500/20 border border-red-500/30 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/V6s6mh9X/IMG-2300.png" alt="DreamQc" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-3xl\'>�����💻</span>';">
+        </div>
+        <div class="text-center">
+         <p class="text-xs text-gray-500">Web-App Dev</p>
+         <p class="font-semibold text-sm">@DreamQc</p>
+        </div></a> <!-- Full Time Intern --> <a href="https://x.com/Thaxt21" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center space-y-2 p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
+        <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-red-500/20 to-orange-500/20 border border-red-500/30 flex items-center justify-center overflow-hidden"><img src="https://i.postimg.cc/66YZ2ryY/IMG-8918.jpg" alt="Thaxt21" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none'; this.parentElement.innerHTML='<span class=\'text-3xl\'>🎮</span>';">
+        </div>
+        <div class="text-center">
+         <p class="text-xs text-gray-500">Full Time Intern</p>
+         <p class="font-semibold text-sm">@Thaxt21</p>
+        </div></a>
+      </div>
+     </div>
+    </div>
+   </div><!-- Admin Featured Games Modal -->
+   <div id="admin-featured-modal" class="fixed inset-0 z-50 hidden">
+    <div class="modal-overlay absolute inset-0" id="admin-featured-overlay"></div>
+    <div class="modal-content absolute bottom-0 left-0 right-0 rounded-t-3xl p-6 space-y-4 max-h-[85%] overflow-auto">
+     <div class="flex items-center justify-between">
+      <h2 class="text-xl font-bold">⭐ Featured Games</h2><button id="close-admin-featured" class="icon-btn w-10 h-10 rounded-full flex items-center justify-center text-gray-400">
+       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+       </svg></button>
+     </div>
+     <p class="text-sm text-gray-400">Select 2 games to feature on the home page</p><!-- Featured Game Selection -->
+     <div class="space-y-4">
+      <div><label class="block text-sm font-medium mb-2">Featured Game 1</label> <select id="featured-game-1" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50"> <option value="">Select a game...</option> </select>
+      </div>
+      <div><label class="block text-sm font-medium mb-2">Featured Game 2</label> <select id="featured-game-2" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-500/50 focus:ring-1 focus:ring-red-500/50"> <option value="">Select a game...</option> </select>
+      </div>
+      <div id="featured-error" class="text-red-500 text-sm hidden"></div><button id="save-featured-btn" class="w-full py-3 rounded-xl bg-gradient-to-r from-red-500 to-orange-500 font-semibold hover:opacity-90 transition-opacity"> Save Featured Games </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    const defaultConfig = {
+      platform_name: 'GamesOnCro',
+      welcome_message: 'Welcome back, Player',
+      featured_section_title: 'Featured Games',
+      primary_color: '#ef4444',
+      background_color: '#0a0a0c',
+      surface_color: '#1e1e23',
+      text_color: '#ffffff',
+      secondary_text_color: '#9ca3af'
+    };
+    
+    let config = { ...defaultConfig };
+    let userData = [];
+    let currentUser = null;
+    let isDarkMode = true;
+    let notificationsEnabled = false;
+    let currentLanguage = 'English';
+    let isAdminMode = false;
+    let adminHoldTimer = null;
+    
+    // Navigation
+    const navItems = document.querySelectorAll('.nav-item');
+    const pages = document.querySelectorAll('.page');
+    
+    function navigateTo(pageName) {
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        item.classList.add('text-gray-500');
+        if (item.dataset.page === pageName) {
+          item.classList.add('active');
+          item.classList.remove('text-gray-500');
+        }
+      });
+      
+      pages.forEach(page => {
+        page.classList.add('hidden');
+        if (page.id === `page-${pageName}`) {
+          page.classList.remove('hidden');
+        }
+      });
+    }
+    
+    navItems.forEach(item => {
+      item.addEventListener('click', () => navigateTo(item.dataset.page));
+    });
+    
+    // Logo click returns to home
+    document.getElementById('logo-btn').addEventListener('click', () => navigateTo('home'));
+    
+    // Settings Modal
+    const settingsModal = document.getElementById('settings-modal');
+    document.getElementById('settings-btn').addEventListener('click', () => {
+      settingsModal.classList.remove('hidden');
+      updateAdminButtonsVisibility();
+    });
+    document.getElementById('close-settings').addEventListener('click', () => settingsModal.classList.add('hidden'));
+    document.getElementById('settings-overlay').addEventListener('click', () => settingsModal.classList.add('hidden'));
+    
+    // Info Modal
+    const infoModal = document.getElementById('info-modal');
+    document.getElementById('info-btn').addEventListener('click', () => {
+      infoModal.classList.remove('hidden');
+    });
+    document.getElementById('close-info').addEventListener('click', () => infoModal.classList.add('hidden'));
+    document.getElementById('info-overlay').addEventListener('click', () => infoModal.classList.add('hidden'));
+    
+    // Admin Mode Activation (Hold on "Settings" text for 2 seconds)
+    const settingsHeader = document.getElementById('settings-header');
+    
+    settingsHeader.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (currentUser && (currentUser.username === 'DreamQc' || currentUser.username === 'Thaxt')) {
+        adminHoldTimer = setTimeout(() => {
+          activateAdminMode();
+        }, 2000);
+      }
+    });
+    
+    settingsHeader.addEventListener('touchend', () => {
+      if (adminHoldTimer) {
+        clearTimeout(adminHoldTimer);
+        adminHoldTimer = null;
+      }
+    });
+    
+    settingsHeader.addEventListener('touchmove', () => {
+      if (adminHoldTimer) {
+        clearTimeout(adminHoldTimer);
+        adminHoldTimer = null;
+      }
+    });
+    
+    // Mouse events for desktop
+    settingsHeader.addEventListener('mousedown', (e) => {
+      if (currentUser && (currentUser.username === 'DreamQc' || currentUser.username === 'Thaxt')) {
+        adminHoldTimer = setTimeout(() => {
+          activateAdminMode();
+        }, 2000);
+      }
+    });
+    
+    settingsHeader.addEventListener('mouseup', () => {
+      if (adminHoldTimer) {
+        clearTimeout(adminHoldTimer);
+        adminHoldTimer = null;
+      }
+    });
+    
+    settingsHeader.addEventListener('mouseleave', () => {
+      if (adminHoldTimer) {
+        clearTimeout(adminHoldTimer);
+        adminHoldTimer = null;
+      }
+    });
+    
+    function activateAdminMode() {
+      if (!isAdminMode) {
+        isAdminMode = true;
+        updateAdminButtonsVisibility();
+        showMessage('🔓 Admin Mode Activated');
+      }
+    }
+    
+    function updateAdminButtonsVisibility() {
+      const adminButtons = document.getElementById('admin-buttons');
+      if (currentUser && (currentUser.username === 'DreamQc' || currentUser.username === 'Thaxt') && isAdminMode) {
+        adminButtons.classList.remove('hidden');
+      } else {
+        adminButtons.classList.add('hidden');
+      }
+    }
+    
+    // Admin News Modal
+    const adminNewsModal = document.getElementById('admin-news-modal');
+    document.getElementById('submit-news-btn').addEventListener('click', () => {
+      settingsModal.classList.add('hidden');
+      adminNewsModal.classList.remove('hidden');
+      renderAdminNewsList();
+    });
+    document.getElementById('close-admin-news').addEventListener('click', () => adminNewsModal.classList.add('hidden'));
+    document.getElementById('admin-news-overlay').addEventListener('click', () => adminNewsModal.classList.add('hidden'));
+    
+    // Admin Featured Games Modal
+    const adminFeaturedModal = document.getElementById('admin-featured-modal');
+    document.getElementById('featured-games-btn').addEventListener('click', () => {
+      settingsModal.classList.add('hidden');
+      adminFeaturedModal.classList.remove('hidden');
+      populateFeaturedGameSelectors();
+      loadCurrentFeaturedGames();
+    });
+    document.getElementById('close-admin-featured').addEventListener('click', () => adminFeaturedModal.classList.add('hidden'));
+    document.getElementById('admin-featured-overlay').addEventListener('click', () => adminFeaturedModal.classList.add('hidden'));
+    
+    // Add News Form
+    document.getElementById('add-news-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await addNewsItem();
+    });
+    
+    // Save Featured Games
+    document.getElementById('save-featured-btn').addEventListener('click', async () => {
+      await saveFeaturedGames();
+    });
+    
+    async function addNewsItem() {
+      const title = document.getElementById('news-title').value.trim();
+      const description = document.getElementById('news-description').value.trim();
+      const link = document.getElementById('news-link').value.trim();
+      const dateInput = document.getElementById('news-date').value;
+      const errorEl = document.getElementById('add-news-error');
+      const submitBtn = document.getElementById('add-news-submit');
+      
+      errorEl.classList.add('hidden');
+      
+      // Count existing news items
+      const newsCount = userData.filter(item => item.settingType === 'news').length;
+      if (newsCount >= 999) {
+        errorEl.textContent = 'Maximum limit of 999 news items reached';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Publishing...';
+      
+      // Use custom date if provided, otherwise use current date
+      const newsDate = dateInput ? new Date(dateInput).toISOString() : new Date().toISOString();
+      
+      const newsId = 'news_' + Date.now();
+      const result = await window.dataSdk.create({
+        newsId: newsId,
+        newsTitle: title,
+        newsDescription: description,
+        newsLink: link,
+        newsDate: newsDate,
+        settingType: 'news',
+        username: '',
+        pin: '',
+        createdAt: '',
+        favoriteGames: '',
+        achievements: 0,
+        croEarned: 0,
+        profilePicture: '',
+        featuredGame1: '',
+        featuredGame2: ''
+      });
+      
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Publish News';
+      
+      if (result.isOk) {
+        document.getElementById('news-title').value = '';
+        document.getElementById('news-description').value = '';
+        document.getElementById('news-link').value = '';
+        document.getElementById('news-date').value = '';
+        showMessage('News published successfully!');
+      } else {
+        errorEl.textContent = 'Failed to publish news';
+        errorEl.classList.remove('hidden');
+      }
+    }
+    
+    function renderAdminNewsList() {
+      const newsList = document.getElementById('admin-news-list');
+      const newsItems = userData.filter(item => item.settingType === 'news').sort((a, b) => {
+        return new Date(b.newsDate) - new Date(a.newsDate);
+      });
+      
+      if (newsItems.length === 0) {
+        newsList.innerHTML = '<div class="text-center py-4 text-gray-500 text-sm">No news items yet</div>';
+        return;
+      }
+      
+      newsList.innerHTML = newsItems.map(item => {
+        const date = new Date(item.newsDate);
+        const timeAgo = getTimeAgo(date);
+        
+        return `
+          <div class="p-3 rounded-xl bg-white/5 border border-white/10 space-y-2">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex-1 min-w-0">
+                <h4 class="font-semibold text-sm">${item.newsTitle}</h4>
+                <p class="text-xs text-gray-500 mt-1">${timeAgo}</p>
+              </div>
+              <button class="delete-news-btn flex-shrink-0 w-8 h-8 rounded-lg bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors flex items-center justify-center" data-news-id="${item.newsId}">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+              </button>
+            </div>
+            <p class="text-xs text-gray-400">${item.newsDescription}</p>
+            ${item.newsLink ? `<p class="text-xs text-blue-400 truncate">🔗 ${item.newsLink}</p>` : ''}
+          </div>
+        `;
+      }).join('');
+      
+      // Add delete handlers
+      newsList.querySelectorAll('.delete-news-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const newsId = btn.dataset.newsId;
+          await deleteNewsItem(newsId);
+        });
+      });
+    }
+    
+    async function deleteNewsItem(newsId) {
+      const newsItem = userData.find(item => item.newsId === newsId);
+      if (!newsItem) return;
+      
+      const result = await window.dataSdk.delete(newsItem);
+      if (result.isOk) {
+        showMessage('News deleted');
+        renderAdminNewsList();
+      } else {
+        showMessage('Failed to delete news');
+      }
+    }
+    
+    function getTimeAgo(date) {
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+      const diffWeeks = Math.floor(diffMs / 604800000);
+      
+      // If the difference is less than 1 minute, show "Just Now"
+      if (diffMins < 1) return 'Just Now';
+      if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+      if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+      if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+      if (diffWeeks < 4) return `${diffWeeks} week${diffWeeks > 1 ? 's' : ''} ago`;
+      return date.toLocaleDateString();
+    }
+    
+    function renderNewsPage() {
+      const newsItems = userData.filter(item => item.settingType === 'news').sort((a, b) => {
+        return new Date(b.newsDate) - new Date(a.newsDate);
+      });
+      
+      const newsContainer = document.querySelector('#page-news .space-y-3');
+      if (!newsContainer) return;
+      
+      if (newsItems.length === 0) {
+        newsContainer.innerHTML = `
+          <article class="game-card rounded-xl p-4 space-y-2">
+            <h3 class="font-semibold">No news yet</h3>
+            <p class="text-sm text-gray-400">Check back soon for updates!</p>
+          </article>
+        `;
+        return;
+      }
+      
+      newsContainer.innerHTML = newsItems.map(item => {
+        const date = new Date(item.newsDate);
+        const timeAgo = getTimeAgo(date);
+        const isToday = date.toDateString() === new Date().toDateString();
+        
+        const clickHandler = item.newsLink ? `onclick="window.open('${item.newsLink}', '_blank', 'noopener,noreferrer')" style="cursor: pointer;"` : '';
+        
+        return `
+          <article class="game-card rounded-xl p-4 space-y-2 ${item.newsLink ? 'hover:border-red-500/30 transition-all' : ''}" ${clickHandler}>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <span class="w-2 h-2 ${isToday ? 'bg-red-500' : 'bg-gray-500'} rounded-full"></span>
+              <span>${timeAgo}</span>
+            </div>
+            <h3 class="font-semibold">${item.newsTitle}</h3>
+            <p class="text-sm text-gray-400">${item.newsDescription}</p>
+            ${item.newsLink ? '<p class="text-xs text-red-400">Click to read more →</p>' : ''}
+          </article>
+        `;
+      }).join('');
+    }
+    
+    function populateFeaturedGameSelectors() {
+      const selector1 = document.getElementById('featured-game-1');
+      const selector2 = document.getElementById('featured-game-2');
+      
+      const gameOptions = Object.keys(gameData).map(gameId => {
+        const game = gameData[gameId];
+        return `<option value="${gameId}">${game.title}</option>`;
+      }).join('');
+      
+      selector1.innerHTML = '<option value="">Select a game...</option>' + gameOptions;
+      selector2.innerHTML = '<option value="">Select a game...</option>' + gameOptions;
+    }
+    
+    function loadCurrentFeaturedGames() {
+      const settings = userData.find(item => item.settingType === 'featured');
+      if (settings) {
+        document.getElementById('featured-game-1').value = settings.featuredGame1 || '';
+        document.getElementById('featured-game-2').value = settings.featuredGame2 || '';
+      }
+    }
+    
+    async function saveFeaturedGames() {
+      const game1 = document.getElementById('featured-game-1').value;
+      const game2 = document.getElementById('featured-game-2').value;
+      const errorEl = document.getElementById('featured-error');
+      const saveBtn = document.getElementById('save-featured-btn');
+      
+      errorEl.classList.add('hidden');
+      
+      if (!game1 || !game2) {
+        errorEl.textContent = 'Please select both games';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      
+      if (game1 === game2) {
+        errorEl.textContent = 'Please select different games';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+      
+      let settings = userData.find(item => item.settingType === 'featured');
+      
+      if (settings) {
+        settings.featuredGame1 = game1;
+        settings.featuredGame2 = game2;
+        const result = await window.dataSdk.update(settings);
+        
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Featured Games';
+        
+        if (result.isOk) {
+          adminFeaturedModal.classList.add('hidden');
+          showMessage('Featured games updated!');
+          renderFeaturedGames();
+        } else {
+          errorEl.textContent = 'Failed to save featured games';
+          errorEl.classList.remove('hidden');
+        }
+      } else {
+        const result = await window.dataSdk.create({
+          settingType: 'featured',
+          featuredGame1: game1,
+          featuredGame2: game2,
+          username: '',
+          pin: '',
+          createdAt: '',
+          favoriteGames: '',
+          achievements: 0,
+          croEarned: 0,
+          profilePicture: '',
+          newsId: '',
+          newsTitle: '',
+          newsDescription: '',
+          newsLink: '',
+          newsDate: ''
+        });
+        
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Featured Games';
+        
+        if (result.isOk) {
+          adminFeaturedModal.classList.add('hidden');
+          showMessage('Featured games updated!');
+          renderFeaturedGames();
+        } else {
+          errorEl.textContent = 'Failed to save featured games';
+          errorEl.classList.remove('hidden');
+        }
+      }
+    }
+    
+    function renderFeaturedGames() {
+      const settings = userData.find(item => item.settingType === 'featured');
+      const featuredContainer = document.querySelector('#page-home .grid');
+      
+      if (!settings || !settings.featuredGame1 || !settings.featuredGame2) {
+        // Default featured games
+        featuredContainer.innerHTML = `
+          <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="spacewar-x">
+            <div class="aspect-video bg-gradient-to-br from-indigo-900/50 to-purple-900/50 flex items-center justify-center overflow-hidden">
+              <img src="https://i.postimg.cc/1X1vKQFJ/IMG-0023.jpg" alt="SpaceWar-X" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\\'text-4xl sm:text-5xl\\'>🚀</span>';">
+            </div>
+            <div class="p-3 sm:p-4">
+              <div class="flex items-center gap-2 mb-1 flex-wrap">
+                <span class="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded-full">F2P</span>
+                <span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+              </div>
+              <h3 class="font-semibold text-sm sm:text-base">SpaceWar-X</h3>
+              <p class="text-xs sm:text-sm text-gray-500">Retro • Shooter</p>
+            </div>
+          </div>
+          <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="green-candles">
+            <div class="aspect-video bg-gradient-to-br from-green-900/50 to-emerald-900/50 flex items-center justify-center overflow-hidden">
+              <img src="https://i.postimg.cc/FHXD5mny/IMG-0053.jpg" alt="Green Candles" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\\'text-4xl sm:text-5xl\\'>🕊�����</span>';">
+            </div>
+            <div class="p-3 sm:p-4">
+              <div class="flex items-center gap-2 mb-1 flex-wrap">
+                <span class="px-2 py-0.5 text-xs bg-green-500/20 text-green-400 rounded-full">F2P</span>
+                <span class="px-2 py-0.5 text-xs bg-yellow-500/20 text-yellow-400 rounded-full">P2E</span>
+              </div>
+              <h3 class="font-semibold text-sm sm:text-base">Green Candles</h3>
+              <p class="text-xs sm:text-sm text-gray-500">Retro • Arcade</p>
+            </div>
+          </div>
+        `;
+      } else {
+        const game1 = gameData[settings.featuredGame1];
+        const game2 = gameData[settings.featuredGame2];
+        
+        featuredContainer.innerHTML = [game1, game2].map((game, index) => {
+          if (!game) return '';
+          const gameId = index === 0 ? settings.featuredGame1 : settings.featuredGame2;
+          
+          const heroContent = game.image 
+            ? `<img src="${game.image}" alt="${game.title}" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\\'text-4xl sm:text-5xl\\'>${game.emoji}</span>';">`
+            : `<span class="text-4xl sm:text-5xl">${game.emoji}</span>`;
+          
+          return `
+            <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="${gameId}">
+              <div class="aspect-video bg-gradient-to-br ${game.gradient} flex items-center justify-center overflow-hidden">
+                ${heroContent}
+              </div>
+              <div class="p-3 sm:p-4">
+                <div class="flex items-center gap-2 mb-1 flex-wrap">
+                  ${game.tags.slice(0, 2).map(tag => `<span class="px-2 py-0.5 text-xs ${tag.class} rounded-full">${tag.text}</span>`).join('')}
+                </div>
+                <h3 class="font-semibold text-sm sm:text-base">${game.title}</h3>
+                <p class="text-xs sm:text-sm text-gray-500">${game.tags[game.tags.length - 1].text}</p>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      // Re-attach click handlers
+      document.querySelectorAll('#page-home .game-card[data-game]').forEach(card => {
+        card.addEventListener('click', () => {
+          const gameId = card.dataset.game;
+          openGameDetail(gameId);
+        });
+      });
+    }
+    
+    // Settings Toggles
+    document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+    document.getElementById('notif-toggle').addEventListener('click', toggleNotifications);
+    document.getElementById('language-toggle').addEventListener('click', toggleLanguage);
+    
+    // Profile Modal
+    const profileModal = document.getElementById('profile-modal');
+    document.getElementById('profile-btn').addEventListener('click', () => profileModal.classList.remove('hidden'));
+    document.getElementById('close-profile').addEventListener('click', () => profileModal.classList.add('hidden'));
+    document.getElementById('profile-overlay').addEventListener('click', () => profileModal.classList.add('hidden'));
+    
+    // Auth Modals
+    const signinModal = document.getElementById('signin-modal');
+    const createModal = document.getElementById('create-account-modal');
+    
+    document.getElementById('signin-btn').addEventListener('click', () => {
+      profileModal.classList.add('hidden');
+      signinModal.classList.remove('hidden');
+    });
+    
+    document.getElementById('create-account-btn').addEventListener('click', () => {
+      profileModal.classList.add('hidden');
+      createModal.classList.remove('hidden');
+    });
+    
+    document.getElementById('signout-btn').addEventListener('click', signOut);
+    
+    document.getElementById('close-signin').addEventListener('click', () => signinModal.classList.add('hidden'));
+    document.getElementById('signin-overlay').addEventListener('click', () => signinModal.classList.add('hidden'));
+    
+    document.getElementById('close-create').addEventListener('click', () => createModal.classList.add('hidden'));
+    document.getElementById('create-overlay').addEventListener('click', () => createModal.classList.add('hidden'));
+    
+    // Favorites navigation
+    document.getElementById('favorite-games-btn').addEventListener('click', () => {
+      showFavoritesView(true);
+    });
+    
+    document.getElementById('back-to-profile').addEventListener('click', () => {
+      showFavoritesView(false);
+    });
+    
+    // Profile Picture Modal
+    const profilePictureModal = document.getElementById('profile-picture-modal');
+    
+    document.getElementById('profile-picture-container').addEventListener('click', () => {
+      if (!currentUser) {
+        showMessage('Please sign in to change your profile picture');
+        return;
+      }
+      profilePictureModal.classList.remove('hidden');
+      if (currentUser.profilePicture) {
+        document.getElementById('profile-picture-url').value = currentUser.profilePicture;
+      }
+    });
+    
+    document.getElementById('close-profile-picture').addEventListener('click', () => {
+      profilePictureModal.classList.add('hidden');
+    });
+    
+    document.getElementById('profile-picture-overlay').addEventListener('click', () => {
+      profilePictureModal.classList.add('hidden');
+    });
+    
+    document.getElementById('profile-picture-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await updateProfilePicture(document.getElementById('profile-picture-url').value);
+    });
+    
+    document.getElementById('remove-profile-picture').addEventListener('click', async () => {
+      await updateProfilePicture('');
+    });
+    
+    // Auth Forms
+    document.getElementById('signin-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('signin-username').value;
+      const pin = document.getElementById('signin-pin').value;
+      await signIn(username, pin);
+    });
+    
+    document.getElementById('create-account-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('create-username').value;
+      const pin = document.getElementById('create-pin').value;
+      const pinConfirm = document.getElementById('create-pin-confirm').value;
+      
+      // Check if PINs match
+      const errorEl = document.getElementById('create-error');
+      if (pin !== pinConfirm) {
+        errorEl.textContent = 'PINs do not match';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      
+      const success = await createAccount(username, pin);
+      if (success) {
+        createModal.classList.add('hidden');
+        document.getElementById('create-username').value = '';
+        document.getElementById('create-pin').value = '';
+        document.getElementById('create-pin-confirm').value = '';
+        
+        // Auto sign-in after account creation
+        const user = userData.find(u => u.username === username && u.pin === pin && u.settingType === 'user');
+        if (user) {
+          currentUser = user;
+          updateProfileDisplay();
+          profileModal.classList.remove('hidden');
+          showMessage('Account created and signed in!');
+        }
+      }
+    });
+    
+    // Genre chips
+    const genreChips = document.querySelectorAll('.genre-chip');
+    let currentGenre = 'All';
+    
+    genreChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        genreChips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        currentGenre = chip.textContent.trim();
+        applyFilters();
+      });
+    });
+    
+    // Filter buttons
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    let currentFilter = 'all';
+    
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => {
+          b.classList.remove('bg-red-500/20', 'text-red-400', 'border-red-500/30');
+          b.classList.add('bg-white/5', 'text-gray-400', 'border-white/10');
+        });
+        btn.classList.remove('bg-white/5', 'text-gray-400', 'border-white/10');
+        btn.classList.add('bg-red-500/20', 'text-red-400', 'border-red-500/30');
+        
+        if (btn.id === 'filter-all') {
+          currentFilter = 'all';
+        } else if (btn.id === 'filter-f2p') {
+          currentFilter = 'F2P';
+        } else if (btn.id === 'filter-p2e') {
+          currentFilter = 'P2E';
+        }
+        
+        applyFilters();
+      });
+    });
+    
+    function applyFilters() {
+      const gameCardsInLibrary = document.querySelectorAll('#page-games .game-card[data-game]');
+      
+      gameCardsInLibrary.forEach(card => {
+        const gameId = card.dataset.game;
+        const game = gameData[gameId];
+        
+        if (!game) {
+          card.style.display = 'none';
+          return;
+        }
+        
+        let showCard = false;
+        
+        // Check monetization filter
+        let passesMonetizationFilter = false;
+        if (currentFilter === 'all') {
+          passesMonetizationFilter = true;
+        } else if (game.monetization && game.monetization.includes(currentFilter)) {
+          passesMonetizationFilter = true;
+        }
+        
+        // Check genre filter
+        let passesGenreFilter = false;
+        if (currentGenre === 'All') {
+          passesGenreFilter = true;
+        } else if (game.genres && game.genres.includes(currentGenre)) {
+          passesGenreFilter = true;
+        }
+        
+        // Show card only if it passes both filters
+        showCard = passesMonetizationFilter && passesGenreFilter;
+        
+        card.style.display = showCard ? 'block' : 'none';
+      });
+    }
+    
+    // Game Detail Modal
+    const gameDetailModal = document.getElementById('game-detail-modal');
+    const gameCards = document.querySelectorAll('.game-card[data-game]');
+    let currentGameId = null;
+    
+    const gameData = {
+      'spacewar-x': {
+        title: 'SpaceWar-X',
+        image: 'https://i.postimg.cc/1X1vKQFJ/IMG-0023.jpg',
+        emoji: '🚀',
+        gradient: 'from-indigo-900/50 to-purple-900/50',
+        tags: [
+          { text: 'F2P', class: 'bg-green-500/20 text-green-400' },
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'Retro', class: 'bg-purple-500/20 text-purple-400' },
+          { text: 'Shooter', class: 'bg-red-500/20 text-red-400' }
+        ],
+        rating: '4.9',
+        project: 'Cr00ts-X',
+        projectUrl: 'https://x.com/Cr00tsNFT',
+        description: 'A retro-style space shooter that brings classic arcade action to the blockchain. Blast through waves of enemies, collect power-ups, and earn CRO rewards in this nostalgic shooter experience.',
+        features: [
+          'Classic arcade-style shooter gameplay',
+          'NFT spaceships and weapon upgrades',
+          'Daily challenges and leaderboards',
+          'Play-to-earn with CRO rewards'
+        ],
+        earnings: 'Top pilots can earn 20-80 CRO weekly through high scores, daily challenges, and tournament placements.',
+        playUrl: 'https://degengames.ca/spacewarx',
+        monetization: ['F2P', 'P2E'],
+        genres: ['Retro', 'Shooter']
+      },
+      'cronos-quest': {
+        title: 'Cronos Quest',
+        emoji: '���',
+        gradient: 'from-purple-900/50 to-blue-900/50',
+        tags: [
+          { text: 'F2P', class: 'bg-green-500/20 text-green-400' },
+          { text: 'RPG', class: 'bg-red-500/20 text-red-400' }
+        ],
+        rating: '4.8',
+        project: 'CronosGaming',
+        description: 'Embark on an epic adventure through the Cronos blockchain. Battle monsters, collect rare NFTs, and earn CRO tokens as you progress through challenging dungeons and quests.',
+        features: [
+          'Play-to-earn mechanics with CRO rewards',
+          'Collectible NFT characters and items',
+          'Cross-chain compatibility',
+          'Regular updates and new content'
+        ],
+        earnings: 'Players can earn between 5-50 CRO daily through quests, battles, and trading NFT items on the marketplace.',
+        monetization: ['F2P'],
+        genres: ['RPG']
+      },
+      'green-candles': {
+        title: 'Green Candles',
+        image: 'https://i.postimg.cc/FHXD5mny/IMG-0053.jpg',
+        emoji: '🕊️',
+        gradient: 'from-green-900/50 to-emerald-900/50',
+        tags: [
+          { text: 'F2P', class: 'bg-green-500/20 text-green-400' },
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'Retro', class: 'bg-purple-500/20 text-purple-400' },
+          { text: 'Arcade', class: 'bg-pink-500/20 text-pink-400' }
+        ],
+        rating: '4.7',
+        project: 'The Bozos',
+        projectUrl: 'https://x.com/FFTBcro',
+        description: 'A flappy bird inspired arcade game from $FFTB - The Bozos. Navigate through challenging obstacles in this addictive retro-style game while earning CRO rewards for your skills.',
+        features: [
+          'Classic flappy bird mechanics',
+          'Retro pixel art graphics',
+          'Daily challenges and leaderboards',
+          'Play-to-earn CRO rewards'
+        ],
+        earnings: 'Skilled players can earn 10-60 CRO weekly through high scores, daily challenges, and competitive leaderboards.',
+        playUrl: 'https://degengames.ca/green-candles',
+        monetization: ['F2P', 'P2E'],
+        genres: ['Retro', 'Arcade']
+      },
+      'dbd-fantasy': {
+        title: 'DBD Fantasy Football',
+        image: 'https://i.postimg.cc/DwFMfBhw/IMG-0060.png',
+        emoji: '���',
+        gradient: 'from-orange-900/50 to-red-900/50',
+        tags: [
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'Strategy', class: 'bg-orange-500/20 text-orange-400' }
+        ],
+        rating: '4.8',
+        project: 'Dead Beat Dads',
+        projectUrl: 'https://x.com/WhosurdaddyCRO/',
+        description: 'Dead Beat Dad Fantasy Football is the 1st fictional based fantasy sports league on Cronos. Mint Dead Beat Dad themed football NFTs each season, use $DADDY token, and compete to win the Beer Bowl Title and a massive CRO payout.',
+        features: [
+          'NFT based gameplay',
+          'Strategy and luck based gameplay',
+          'New mint each season',
+          'Unique Fantasy Football experience',
+          'Play-To-Earn $DADDY & $CRO'
+        ],
+        earnings: 'Earn $DADDY and $CRO (Various amount)',
+        playUrl: 'https://dbdfantasyfootball.com/',
+        monetization: ['P2E'],
+        genres: ['Strategy']
+      },
+      'crypto-racers': {
+        title: 'Crypto Racers',
+        emoji: '🏁',
+        gradient: 'from-cyan-900/50 to-teal-900/50',
+        tags: [
+          { text: 'F2P', class: 'bg-green-500/20 text-green-400' },
+          { text: 'Racing', class: 'bg-purple-500/20 text-purple-400' }
+        ],
+        rating: '4.7',
+        project: 'SpeedCro',
+        description: 'Race to the finish line in this high-octane blockchain racing game. Customize your vehicles with NFT parts and compete for CRO rewards.',
+        features: [
+          'Fast-paced racing action',
+          'NFT vehicle customization',
+          'Daily races and tournaments',
+          'Multiplayer racing leagues'
+        ],
+        earnings: 'Top racers earn 15-75 CRO per week through race wins and tournament placements.',
+        monetization: ['F2P'],
+        genres: ['Racing']
+      },
+      'nft-cards': {
+        title: 'NFT Cards',
+        emoji: '🃏',
+        gradient: 'from-pink-900/50 to-purple-900/50',
+        tags: [
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'Card Game', class: 'bg-indigo-500/20 text-indigo-400' }
+        ],
+        rating: '4.9',
+        project: 'CroCards',
+        description: 'Build your ultimate deck with tradeable NFT cards. Strategize, battle, and earn in this collectible card game on Cronos.',
+        features: [
+          'Hundreds of unique NFT cards',
+          'Strategic deck-building gameplay',
+          'Card trading marketplace',
+          'Seasonal tournaments'
+        ],
+        earnings: 'Players earn 8-60 CRO weekly through victories, card sales, and tournament prizes.',
+        monetization: ['P2E'],
+        genres: ['Card Games']
+      },
+      'kingdom-builder': {
+        title: 'Kingdom Builder',
+        emoji: '🏰',
+        gradient: 'from-amber-900/50 to-orange-900/50',
+        tags: [
+          { text: 'F2P', class: 'bg-green-500/20 text-green-400' },
+          { text: 'Strategy', class: 'bg-orange-500/20 text-orange-400' }
+        ],
+        rating: '4.5',
+        project: 'CroEmpire',
+        description: 'Build and manage your blockchain kingdom. Develop resources, form alliances, and expand your empire in this strategic city-builder.',
+        features: [
+          'Complex resource management',
+          'Alliance and guild systems',
+          'NFT buildings and heroes',
+          'Ongoing world events'
+        ],
+        earnings: 'Strategic players earn 12-45 CRO weekly through resource trading and territory control.',
+        monetization: ['F2P'],
+        genres: ['Strategy']
+      },
+      'defi-farm': {
+        title: 'DeFi Farm',
+        emoji: '🌾',
+        gradient: 'from-emerald-900/50 to-green-900/50',
+        tags: [
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'Simulation', class: 'bg-teal-500/20 text-teal-400' }
+        ],
+        rating: '4.4',
+        project: 'CroHarvest',
+        description: 'Experience blockchain farming simulation. Grow crops, raise livestock, and earn CRO through your virtual farm management skills.',
+        features: [
+          'Relaxing farming simulation',
+          'NFT crops and animals',
+          'Marketplace for produce trading',
+          'Seasonal farming events'
+        ],
+        earnings: 'Farmers can earn 6-35 CRO weekly through crop sales and marketplace trading.',
+        monetization: ['P2E'],
+        genres: ['Simulation']
+      },
+      'cronos-army': {
+        title: 'Cronos Army',
+        image: 'https://i.postimg.cc/x1jpn1r6/IMG-0061.jpg',
+        emoji: '⚔️',
+        gradient: 'from-slate-900/50 to-gray-900/50',
+        tags: [
+          { text: 'F2P', class: 'bg-green-500/20 text-green-400' },
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'Strategy', class: 'bg-orange-500/20 text-orange-400' },
+          { text: 'Territory Control', class: 'bg-gray-500/20 text-gray-300' }
+        ],
+        rating: '4.6',
+        project: 'Cronos Army',
+        projectUrl: 'https://x.com/cronosarmy212?s=21&t=YSxk3VEywR-q4GL7dCmcZQ',
+        description: 'Cronos Army is a strategic auto-battler where you build and command an AI-powered army. Collect NFT soldiers, equip them with gear, and conquer territories across the battlefield. Every battle trains your army\'s AI, making it smarter and more effective over time. Hold territories for passive earnings, climb the leaderboards, and dominate the war for Cronos.',
+        features: [
+          'AI-powered auto-battler mechanics',
+          'Collect and upgrade NFT soldiers',
+          'Conquer and hold territories',
+          'Smart AI that learns from battles'
+        ],
+        earnings: '$CA is our platform token, earn $CRO rewards in-game.',
+        playUrl: 'https://t.co/wO8TpVRJLr',
+        monetization: ['F2P', 'P2E'],
+        genres: ['Strategy', 'Territory Control']
+      },
+      'ryoshi-dynasty': {
+        title: 'Ryoshi Dynasty',
+        image: 'https://i.postimg.cc/B6n9wfsz/IMG-0065.jpg',
+        emoji: '🏯',
+        gradient: 'from-red-900/50 to-orange-900/50',
+        tags: [
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'Strategy', class: 'bg-orange-500/20 text-orange-400' },
+          { text: 'PvP', class: 'bg-red-500/20 text-red-400' },
+          { text: 'Territory Control', class: 'bg-gray-500/20 text-gray-300' }
+        ],
+        rating: '4.8',
+        project: 'Ebisus Bay',
+        projectUrl: 'https://x.com/EbisusBay',
+        description: 'Ebisu\'s Bay is a dynamic platform that combines NFT and DEX trading with GameFi, enabling users to join factions for market dominance. It transforms NFTs into engaging game elements, adding an interactive dimension to trading and gaming.',
+        features: [
+          'Control areas against other factions',
+          'Use your NFTs in-game as boosters, troops etc.',
+          'Get listing points for your favorite projects',
+          'Earn $FRTN tokens for listing your NFTs'
+        ],
+        earnings: 'Earn $FRTN tokens by listing your NFTs and controlling territory in faction wars.',
+        playUrl: 'https://app.ebisusbay.com/ryoshi',
+        monetization: ['P2E'],
+        genres: ['Strategy', 'PvP', 'Territory Control']
+      },
+      'chiverse': {
+        title: 'Chiverse',
+        emoji: '��',
+        gradient: 'from-blue-900/50 to-cyan-900/50',
+        tags: [
+          { text: 'F2P', class: 'bg-green-500/20 text-green-400' },
+          { text: 'Adventure', class: 'bg-blue-500/20 text-blue-400' }
+        ],
+        rating: '4.7',
+        project: 'Chiverse Team',
+        description: 'Explore a vast ocean universe filled with mysteries and treasures. Dive into adventures, discover NFT collectibles, and build your aquatic empire.',
+        features: [
+          'Open-world exploration',
+          'NFT creature collection',
+          'Underwater quests',
+          'Community events'
+        ],
+        earnings: 'Explorers earn 8-45 CRO weekly through discoveries and creature trading.',
+        monetization: ['F2P'],
+        genres: ['Adventure']
+      },
+      'mane-city': {
+        title: 'Mane City',
+        emoji: '🦁',
+        gradient: 'from-yellow-900/50 to-amber-900/50',
+        tags: [
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'Simulation', class: 'bg-teal-500/20 text-teal-400' }
+        ],
+        rating: '4.5',
+        project: 'Lion Games',
+        description: 'Build and manage your own virtual city. Design infrastructure, attract residents, and grow your metropolis while earning CRO rewards.',
+        features: [
+          'City building simulation',
+          'NFT building system',
+          'Economic management',
+          'Multiplayer trading'
+        ],
+        earnings: 'Mayors earn 15-70 CRO weekly through successful city management and trading.',
+        monetization: ['P2E'],
+        genres: ['Simulation']
+      },
+      'crooks-empire': {
+        title: 'Crooks Empire',
+        image: 'https://i.postimg.cc/vB0qtnCR/IMG-0070.jpg',
+        emoji: '💰',
+        gradient: 'from-purple-900/50 to-indigo-900/50',
+        tags: [
+          { text: 'F2P', class: 'bg-green-500/20 text-green-400' },
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'Strategy', class: 'bg-orange-500/20 text-orange-400' },
+          { text: 'RPG', class: 'bg-red-500/20 text-red-400' },
+          { text: 'Arcade', class: 'bg-pink-500/20 text-pink-400' }
+        ],
+        rating: '4.8',
+        project: 'Crooks Finance',
+        projectUrl: 'https://x.com/CrooksFinance',
+        description: 'Step into the gritty underworld of the Cronos Chain. Crooks Empire is a faction-based street metaverse where strategy meets skill. Join one of the factions, equip your NFT Legends and Weapons, and battle for supremacy. Whether you prefer high-stakes automated Heists, skill-based Shooters, or surviving endless waves in the Arena, every action earns you real value. Rise from a Prospect to an Immortal Kingpin to unlock massive reward multipliers.',
+        features: [
+          '🔫 Multiple Game Modes: Includes The Heist (Strategy), Sharpshooter (Skill-based aim), Survivor Arena (Bullet-heaven action), and Boss Raids (Co-op)',
+          '🏴 Faction Warfare: Choose your side (Crooks, Wolfswap, The Bozos, Crohounds, Bobz etc.) and dominate the global leaderboards to burn rival tokens',
+          '💪 NFT Integration: Your Crooks Legends & Weapons determine your in-game Rank, Health, and Attack Power',
+          '📢 The Propaganda Machine: A unique Social-Fi hub where engaging with the community on X directly rewards you with crypto (Social-to-Earn)',
+          '📈 Dynamic Economy: Real-time oracle integration ensures rewards are pegged to fair values across the ecosystem'
+        ],
+        earnings: 'From base level rewards for casuals to bigger prizes for high ranks holders with daily boss and raid to earn more. Earn multiple tokens from our partners.',
+        playUrl: 'https://crooks.finance/empire',
+        monetization: ['F2P', 'P2E'],
+        genres: ['Strategy', 'RPG', 'Arcade']
+      },
+      'ryoshi-royale': {
+        title: 'Ryoshi Royale',
+        image: 'https://i.postimg.cc/FRR74qNQ/IMG-0062.png',
+        emoji: '👑',
+        gradient: 'from-pink-900/50 to-rose-900/50',
+        tags: [
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'PvP', class: 'bg-red-500/20 text-red-400' },
+          { text: 'Strategy', class: 'bg-orange-500/20 text-orange-400' }
+        ],
+        rating: '4.9',
+        project: 'Ryoshi Royale',
+        projectUrl: 'https://x.com/ryoshiwithknife?s=21&t=YSxk3VEywR-q4GL7dCmcZQ',
+        description: 'Ryoshi Royale is a cutting-edge web3 battle royale game that combines strategic battle mechanics with blockchain technology to create an immersive gaming experience where your Ryoshi NFTs compete for glory and rewards.',
+        features: [
+          'NFT based gameplay',
+          'Daily & weekly rumbles',
+          'Additional PvP & PvE game modes',
+          'Hero progression mechanics',
+          'Play-to-earn RYOSHI & CRO rewards',
+          'Strategy and luck based gameplay'
+        ],
+        earnings: 'RYOSHI, CRO and in-game tokens.',
+        playUrl: 'https://ryoshiroyale.com/',
+        monetization: ['P2E'],
+        genres: ['PvP', 'Strategy']
+      },
+      'insect-frenzy': {
+        title: 'Insect Frenzy',
+        image: 'https://i.postimg.cc/PxxzR27C/IMG-0063.jpg',
+        emoji: '🐛',
+        gradient: 'from-lime-900/50 to-green-900/50',
+        tags: [
+          { text: 'F2P', class: 'bg-green-500/20 text-green-400' },
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'Retro', class: 'bg-purple-500/20 text-purple-400' },
+          { text: 'Arcade', class: 'bg-pink-500/20 text-pink-400' },
+          { text: 'Tap Game', class: 'bg-indigo-500/20 text-indigo-400' }
+        ],
+        rating: '4.4',
+        project: 'Dweller Dollars',
+        projectUrl: 'https://x.com/dwellerdollars?s=21&t=YSxk3VEywR-q4GL7dCmcZQ',
+        description: 'A retro tap game where you crush bugs, boost your score with power-ups, and compete for crypto rewards �� earnings boosted by CUTS NFTs.',
+        features: [
+          'Classic retro gameplay with addictive tap mechanics',
+          'Power-ups & multipliers including freeze-time and score boosts',
+          'Screenshot-to-compete feature for Discord crypto contests',
+          'Play-to-earn with real cryptocurrency rewards',
+          'CUTS NFT boost for bonus rewards on winnings'
+        ],
+        earnings: 'Players win real cryptocurrency, with CUTS NFT holders earning bonus rewards on their winnings.',
+        playUrl: 'https://degengames.ca/insect-frenzy',
+        monetization: ['F2P', 'P2E'],
+        genres: ['Retro', 'Tap Game', 'Arcade']
+      },
+      'fury-brawl': {
+        title: 'Fury Brawl',
+        emoji: '��',
+        gradient: 'from-red-900/50 to-crimson-900/50',
+        tags: [
+          { text: 'P2E', class: 'bg-yellow-500/20 text-yellow-400' },
+          { text: 'Fighting', class: 'bg-red-500/20 text-red-400' }
+        ],
+        rating: '4.8',
+        project: 'Fight Club',
+        description: 'Enter the arena and prove your fighting skills. Master combos, unlock NFT fighters, and compete in tournaments for CRO prizes.',
+        features: [
+          'Intense fighting mechanics',
+          'NFT fighter collection',
+          'Combo system',
+          'Tournament mode'
+        ],
+        earnings: 'Fighters earn 18-90 CRO weekly through matches and tournament victories.',
+        monetization: ['P2E'],
+        genres: ['Fighting', 'PvP']
+      }
+    };
+    
+    function openGameDetail(gameId) {
+      const game = gameData[gameId];
+      if (!game) return;
+      
+      currentGameId = gameId;
+      
+      document.getElementById('game-detail-title').textContent = game.title;
+      
+      const hero = document.getElementById('game-detail-hero');
+      hero.className = `aspect-video rounded-xl bg-gradient-to-br ${game.gradient} flex items-center justify-center overflow-hidden`;
+      if (game.image) {
+        hero.innerHTML = `<img src="${game.image}" alt="${game.title}" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.parentElement.innerHTML='<span class=\\'text-6xl\\'>${game.emoji}</span>';">`;
+      } else {
+        hero.innerHTML = `<span class="text-6xl">${game.emoji}</span>`;
+      }
+      
+      const tagsContainer = document.getElementById('game-detail-tags');
+      const projectTag = game.projectUrl 
+        ? `<a href="${game.projectUrl}" target="_blank" rel="noopener noreferrer" class="px-3 py-1 text-xs bg-white/10 text-gray-300 rounded-full hover:bg-red-500/20 hover:text-red-400 transition-colors cursor-pointer">🎮 ${game.project}</a>`
+        : `<span class="px-3 py-1 text-xs bg-white/10 text-gray-300 rounded-full">��� ${game.project}</span>`;
+      
+      // Calculate favorites count for this game
+      const favCount = userData.filter(user => {
+        if (!user.favoriteGames) return false;
+        const favorites = user.favoriteGames.split(',').filter(id => id);
+        return favorites.includes(currentGameId);
+      }).length;
+      
+      tagsContainer.innerHTML = game.tags.map(tag => 
+        `<span class="px-3 py-1 text-xs ${tag.class} rounded-full">${tag.text}</span>`
+      ).join('') + 
+      `<span class="px-3 py-1 text-xs bg-white/10 text-gray-300 rounded-full">♥ ${favCount} Favs</span>
+       <span class="px-3 py-1 text-xs bg-white/10 text-gray-300 rounded-full">🎮 By ${game.project}</span>`;
+      
+      document.getElementById('game-detail-description').textContent = game.description;
+      
+      const featuresContainer = document.getElementById('game-detail-features');
+      featuresContainer.innerHTML = game.features.map(feature => 
+        `<li class="flex items-start gap-2">
+          <span class="text-red-500 mt-0.5">✓</span>
+          <span>${feature}</span>
+        </li>`
+      ).join('');
+      
+      document.getElementById('game-detail-earnings').textContent = game.earnings;
+      
+      updateHeartState(gameId);
+      
+      gameDetailModal.classList.remove('hidden');
+    }
+    
+    gameCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const gameId = card.dataset.game;
+        openGameDetail(gameId);
+      });
+    });
+    
+    // Add click handlers to featured section games
+    document.querySelectorAll('#page-home .game-card[data-game]').forEach(card => {
+      card.addEventListener('click', () => {
+        const gameId = card.dataset.game;
+        openGameDetail(gameId);
+      });
+    });
+    
+    document.getElementById('close-game-detail').addEventListener('click', () => {
+      gameDetailModal.classList.add('hidden');
+    });
+    
+    document.getElementById('game-detail-overlay').addEventListener('click', () => {
+      gameDetailModal.classList.add('hidden');
+    });
+    
+    document.getElementById('play-now-btn').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      console.log('Play button clicked for game:', currentGameId);
+      
+      if (!currentGameId) {
+        console.error('No game selected');
+        showMessage('Please select a game first');
+        return;
+      }
+      
+      const game = gameData[currentGameId];
+      if (!game) {
+        console.error('Game data not found for:', currentGameId);
+        showMessage('Game data not found');
+        return;
+      }
+      
+      const playUrl = game.playUrl || (currentGameId === 'spacewar-x' ? 'https://degengames.ca/spacewarx' : null);
+      
+      if (playUrl) {
+        console.log('Opening URL:', playUrl);
+        const newWindow = window.open(playUrl, '_blank', 'noopener,noreferrer');
+        if (!newWindow) {
+          console.error('Failed to open new window - popup may be blocked');
+          showMessage('Please allow popups to play the game');
+        } else {
+          console.log('Successfully opened game in new window');
+        }
+      } else {
+        console.log('No play URL available for this game');
+        showMessage('This game will be available soon!');
+      }
+    });
+    
+    document.getElementById('favorite-heart-btn').addEventListener('click', () => {
+      if (currentGameId) {
+        toggleFavorite(currentGameId);
+      }
+    });
+    
+    // Data SDK Integration
+    const dataHandler = {
+      onDataChanged(data) {
+        userData = data;
+        if (currentUser) {
+          const user = userData.find(u => u.username === currentUser.username && u.settingType !== 'news' && u.settingType !== 'featured');
+          if (user) {
+            currentUser = user;
+            updateProfileDisplay();
+          }
+        }
+        updateTrendingGames();
+        renderNewsPage();
+        renderFeaturedGames();
+      }
+    };
+
+    // Initialize Data SDK
+    async function initDataSdk() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error('Failed to initialize data SDK');
+        }
+      }
+    }
+
+    // Auth Functions
+    async function createAccount(username, pin) {
+      const errorEl = document.getElementById('create-error');
+      errorEl.classList.add('hidden');
+      
+      // Check if username already exists
+      const existingUser = userData.find(u => u.username.toLowerCase() === username.toLowerCase() && u.settingType !== 'news' && u.settingType !== 'featured');
+      if (existingUser) {
+        errorEl.textContent = 'Username taken';
+        errorEl.classList.remove('hidden');
+        return false;
+      }
+      
+      const userCount = userData.filter(u => u.settingType !== 'news' && u.settingType !== 'featured').length;
+      if (userCount >= 999) {
+        errorEl.textContent = 'Maximum user limit reached';
+        errorEl.classList.remove('hidden');
+        return false;
+      }
+
+      const signinSubmit = document.getElementById('signin-submit');
+      const createSubmit = document.getElementById('create-submit');
+      signinSubmit.disabled = true;
+      createSubmit.disabled = true;
+      signinSubmit.textContent = 'Creating...';
+      createSubmit.textContent = 'Creating...';
+
+      const result = await window.dataSdk.create({
+        username: username,
+        pin: pin,
+        createdAt: new Date().toISOString(),
+        favoriteGames: '',
+        achievements: 0,
+        croEarned: 0,
+        profilePicture: '',
+        settingType: 'user',
+        newsId: '',
+        newsTitle: '',
+        newsDescription: '',
+        newsLink: '',
+        newsDate: '',
+        featuredGame1: '',
+        featuredGame2: ''
+      });
+
+      signinSubmit.disabled = false;
+      createSubmit.disabled = false;
+      signinSubmit.textContent = 'Sign In';
+      createSubmit.textContent = 'Create Account';
+
+      if (result.isOk) {
+        return true;
+      } else {
+        errorEl.textContent = 'Failed to create account';
+        errorEl.classList.remove('hidden');
+        return false;
+      }
+    }
+
+    async function signIn(username, pin) {
+      const errorEl = document.getElementById('signin-error');
+      errorEl.classList.add('hidden');
+      
+      const user = userData.find(u => u.username === username && u.pin === pin && u.settingType !== 'news' && u.settingType !== 'featured');
+      if (user) {
+        currentUser = user;
+        updateProfileDisplay();
+        document.getElementById('signin-modal').classList.add('hidden');
+        document.getElementById('signin-username').value = '';
+        document.getElementById('signin-pin').value = '';
+        document.getElementById('profile-modal').classList.remove('hidden');
+        return true;
+      } else {
+        errorEl.textContent = 'Invalid username or PIN';
+        errorEl.classList.remove('hidden');
+        return false;
+      }
+    }
+
+    function signOut() {
+      currentUser = null;
+      isAdminMode = false;
+      updateProfileDisplay();
+      document.getElementById('profile-modal').classList.add('hidden');
+      showFavoritesView(false);
+    }
+    
+    function showFavoritesView(show) {
+      const profileView = document.getElementById('profile-view');
+      const favoritesView = document.getElementById('favorites-view');
+      
+      if (show) {
+        profileView.classList.add('hidden');
+        favoritesView.classList.remove('hidden');
+        renderFavorites();
+      } else {
+        profileView.classList.remove('hidden');
+        favoritesView.classList.add('hidden');
+      }
+    }
+    
+    function renderFavorites() {
+      const favoritesGrid = document.getElementById('favorites-grid');
+      
+      if (!currentUser || !currentUser.favoriteGames) {
+        favoritesGrid.innerHTML = `
+          <div class="text-center py-8 col-span-2 text-gray-500">
+            <p>No favorite games yet</p>
+            <p class="text-sm mt-1">Click the heart on games to add them here</p>
+          </div>`;
+        return;
+      }
+      
+      const favoriteIds = currentUser.favoriteGames.split(',').filter(id => id);
+      
+      if (favoriteIds.length === 0) {
+        favoritesGrid.innerHTML = `
+          <div class="text-center py-8 col-span-2 text-gray-500">
+            <p>No favorite games yet</p>
+            <p class="text-sm mt-1">Click the heart on games to add them here</p>
+          </div>`;
+        return;
+      }
+      
+      favoritesGrid.innerHTML = favoriteIds.map(gameId => {
+        const game = gameData[gameId];
+        if (!game) return '';
+        
+        const heroContent = game.image 
+          ? `<img src="${game.image}" alt="${game.title}" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\\'text-4xl\\'>${game.emoji}</span>';">`
+          : `<span class="text-4xl">${game.emoji}</span>`;
+        
+        return `
+          <div class="game-card rounded-xl overflow-hidden cursor-pointer" data-game="${gameId}">
+            <div class="aspect-video bg-gradient-to-br ${game.gradient} flex items-center justify-center overflow-hidden">
+              ${heroContent}
+            </div>
+            <div class="p-3">
+              <h3 class="font-semibold text-sm">${game.title}</h3>
+              <p class="text-xs text-gray-500">${game.tags[game.tags.length - 1].text}</p>
+            </div>
+          </div>`;
+      }).join('');
+      
+      // Add click handlers for favorite game cards
+      favoritesGrid.querySelectorAll('.game-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const gameId = card.dataset.game;
+          document.getElementById('profile-modal').classList.add('hidden');
+          openGameDetail(gameId);
+        });
+      });
+    }
+    
+    function updateHeartState(gameId) {
+      if (!currentUser) {
+        const heartIcon = document.getElementById('heart-icon');
+        heartIcon.setAttribute('fill', 'none');
+        heartIcon.classList.remove('text-red-500');
+        heartIcon.classList.add('text-white');
+        return;
+      }
+      
+      const favorites = currentUser.favoriteGames ? currentUser.favoriteGames.split(',').filter(id => id) : [];
+      const isFavorited = favorites.includes(gameId);
+      const heartIcon = document.getElementById('heart-icon');
+      
+      if (isFavorited) {
+        heartIcon.setAttribute('fill', 'currentColor');
+        heartIcon.classList.remove('text-white');
+        heartIcon.classList.add('text-red-500');
+      } else {
+        heartIcon.setAttribute('fill', 'none');
+        heartIcon.classList.remove('text-red-500');
+        heartIcon.classList.add('text-white');
+      }
+    }
+    
+    async function toggleFavorite(gameId) {
+      if (!currentUser) {
+        showMessage('Please sign in to favorite games');
+        return;
+      }
+      
+      const favoriteBtn = document.getElementById('favorite-heart-btn');
+      favoriteBtn.disabled = true;
+      
+      const favorites = currentUser.favoriteGames ? currentUser.favoriteGames.split(',').filter(id => id) : [];
+      const index = favorites.indexOf(gameId);
+      
+      if (index > -1) {
+        favorites.splice(index, 1);
+        showMessage('Removed from favorites');
+      } else {
+        favorites.push(gameId);
+        showMessage('Added to favorites!');
+      }
+      
+      currentUser.favoriteGames = favorites.join(',');
+      
+      const result = await window.dataSdk.update(currentUser);
+      if (!result.isOk) {
+        showMessage('Failed to update favorites');
+      } else {
+        updateHeartState(gameId);
+        updateFavoriteCount();
+      }
+      
+      favoriteBtn.disabled = false;
+    }
+
+    async function updateProfilePicture(imageUrl) {
+      if (!currentUser) return;
+      
+      const errorEl = document.getElementById('profile-picture-error');
+      const submitBtn = document.getElementById('profile-picture-submit');
+      const removeBtn = document.getElementById('remove-profile-picture');
+      
+      errorEl.classList.add('hidden');
+      submitBtn.disabled = true;
+      removeBtn.disabled = true;
+      submitBtn.textContent = 'Saving...';
+      
+      currentUser.profilePicture = imageUrl;
+      
+      const result = await window.dataSdk.update(currentUser);
+      
+      submitBtn.disabled = false;
+      removeBtn.disabled = false;
+      submitBtn.textContent = 'Save';
+      
+      if (result.isOk) {
+        profilePictureModal.classList.add('hidden');
+        document.getElementById('profile-picture-url').value = '';
+        updateProfilePictureDisplay();
+        showMessage(imageUrl ? 'Profile picture updated!' : 'Profile picture removed');
+      } else {
+        errorEl.textContent = 'Failed to update profile picture';
+        errorEl.classList.remove('hidden');
+      }
+    }
+    
+    function updateProfilePictureDisplay() {
+      const imgEl = document.getElementById('profile-picture-img');
+      const emojiEl = document.getElementById('profile-picture-emoji');
+      const btnImgEl = document.getElementById('profile-btn-img');
+      const btnIconEl = document.getElementById('profile-btn-icon');
+      
+      if (currentUser && currentUser.profilePicture) {
+        imgEl.src = currentUser.profilePicture;
+        imgEl.classList.remove('hidden');
+        emojiEl.style.display = 'none';
+        
+        btnImgEl.src = currentUser.profilePicture;
+        btnImgEl.classList.remove('hidden');
+        btnIconEl.classList.add('hidden');
+      } else {
+        imgEl.classList.add('hidden');
+        emojiEl.style.display = 'block';
+        
+        btnImgEl.classList.add('hidden');
+        btnIconEl.classList.remove('hidden');
+      }
+    }
+
+    function updateFavoriteCount() {
+      const favoriteCountEl = document.getElementById('favorite-count');
+      if (currentUser) {
+        const favoriteCount = currentUser.favoriteGames ? currentUser.favoriteGames.split(',').filter(id => id).length : 0;
+        favoriteCountEl.textContent = favoriteCount;
+      } else {
+        favoriteCountEl.textContent = '0';
+      }
+    }
+    
+    function updateTrendingGames() {
+      const trendingContainer = document.getElementById('trending-container');
+      if (!trendingContainer) return;
+      
+      // Calculate favorite count for each game
+      const gameFavCounts = {};
+      Object.keys(gameData).forEach(gameId => {
+        gameFavCounts[gameId] = 0;
+      });
+      
+      userData.forEach(user => {
+        if (user.favoriteGames) {
+          const favorites = user.favoriteGames.split(',').filter(id => id);
+          favorites.forEach(gameId => {
+            if (gameFavCounts[gameId] !== undefined) {
+              gameFavCounts[gameId]++;
+            }
+          });
+        }
+      });
+      
+      // Sort games by favorite count and get top 3
+      const sortedGames = Object.entries(gameFavCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3);
+      
+      // Render trending games
+      if (sortedGames.length === 0 || sortedGames[0][1] === 0) {
+        trendingContainer.innerHTML = `
+          <div class="text-center py-8 text-gray-500">
+            <p>No trending games yet</p>
+            <p class="text-sm mt-1">Be the first to favorite a game!</p>
+          </div>
+        `;
+        return;
+      }
+      
+      trendingContainer.innerHTML = sortedGames.map(([gameId, favCount]) => {
+        const game = gameData[gameId];
+        if (!game) return '';
+        
+        const heroContent = game.image 
+          ? `<img src="${game.image}" alt="${game.title}" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\\'text-2xl\\'>${game.emoji}</span>';">`
+          : `<span class="text-2xl">${game.emoji}</span>`;
+        
+        return `
+          <div class="game-card rounded-xl p-3 flex items-center gap-3 cursor-pointer" data-game="${gameId}">
+            <div class="w-14 h-14 rounded-lg bg-gradient-to-br ${game.gradient} flex items-center justify-center flex-shrink-0 overflow-hidden">
+              ${heroContent}
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-semibold text-sm">${game.title}</h3>
+              <p class="text-xs text-gray-500 truncate">${game.tags[game.tags.length - 1].text} • ♥ ${favCount} Favs</p>
+            </div>
+            <div class="w-2 h-2 bg-green-500 rounded-full pulse-dot"></div>
+          </div>
+        `;
+      }).join('');
+      
+      // Add click handlers to trending game cards
+      trendingContainer.querySelectorAll('.game-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const gameId = card.dataset.game;
+          openGameDetail(gameId);
+        });
+      });
+    }
+
+    function updateProfileDisplay() {
+      const usernameEl = document.getElementById('profile-username');
+      const emailEl = document.getElementById('profile-email');
+      const authButtons = document.getElementById('auth-buttons');
+      const signoutBtn = document.getElementById('signout-btn');
+      const achievementsEl = document.getElementById('achievements-count');
+      const croEarnedEl = document.getElementById('cro-earned');
+      const welcomeEl = document.getElementById('welcome-msg');
+
+      if (currentUser) {
+        usernameEl.textContent = currentUser.username;
+        emailEl.textContent = `Joined ${new Date(currentUser.createdAt).toLocaleDateString()}`;
+        authButtons.classList.add('hidden');
+        signoutBtn.classList.remove('hidden');
+        achievementsEl.textContent = currentUser.achievements || 0;
+        croEarnedEl.textContent = (currentUser.croEarned || 0).toFixed(2);
+        updateFavoriteCount();
+        updateProfilePictureDisplay();
+        
+        // Update welcome message with username
+        if (welcomeEl) {
+          welcomeEl.textContent = `Welcome back, ${currentUser.username}`;
+        }
+      } else {
+        usernameEl.textContent = 'Guest Player';
+        emailEl.textContent = 'Create an account to get started';
+        authButtons.classList.remove('hidden');
+        signoutBtn.classList.add('hidden');
+        achievementsEl.textContent = '0';
+        croEarnedEl.textContent = '0.00';
+        updateFavoriteCount();
+        updateProfilePictureDisplay();
+        
+        // Reset welcome message to default
+        if (welcomeEl) {
+          welcomeEl.textContent = config.welcome_message || defaultConfig.welcome_message;
+        }
+      }
+    }
+
+    function showMessage(msg) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'fixed top-20 left-1/2 -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-xl shadow-lg z-[60] fade-in';
+      messageDiv.textContent = msg;
+      document.body.appendChild(messageDiv);
+      setTimeout(() => messageDiv.remove(), 3000);
+    }
+
+    // Settings Functions
+    function toggleDarkMode() {
+      isDarkMode = !isDarkMode;
+      const toggle = document.getElementById('dark-mode-toggle');
+      const knob = toggle.querySelector('div');
+      const appDiv = document.getElementById('app');
+      
+      if (isDarkMode) {
+        toggle.classList.remove('bg-gray-600');
+        toggle.classList.add('bg-red-500');
+        knob.style.right = '2px';
+        knob.style.left = 'auto';
+        document.body.classList.remove('bg-gray-100', 'text-gray-900');
+        document.body.classList.add('bg-[#0a0a0c]', 'text-white');
+        appDiv.classList.remove('text-gray-900');
+        appDiv.classList.add('text-white');
+      } else {
+        toggle.classList.remove('bg-red-500');
+        toggle.classList.add('bg-gray-600');
+        knob.style.left = '2px';
+        knob.style.right = 'auto';
+        document.body.classList.remove('bg-[#0a0a0c]', 'text-white');
+        document.body.classList.add('bg-gray-100', 'text-gray-900');
+        appDiv.classList.remove('text-white');
+        appDiv.classList.add('text-gray-900');
+      }
+    }
+
+    function toggleNotifications() {
+      notificationsEnabled = !notificationsEnabled;
+      const toggle = document.getElementById('notif-toggle');
+      const knob = toggle.querySelector('div');
+      
+      if (notificationsEnabled) {
+        toggle.classList.remove('bg-gray-600');
+        toggle.classList.add('bg-red-500');
+        knob.style.transform = 'translateX(24px)';
+      } else {
+        toggle.classList.remove('bg-red-500');
+        toggle.classList.add('bg-gray-600');
+        knob.style.transform = 'translateX(0)';
+      }
+    }
+
+    function toggleLanguage() {
+      currentLanguage = currentLanguage === 'English' ? 'Fran��ais' : 'English';
+      document.getElementById('language-toggle').textContent = currentLanguage;
+    }
+
+    // SDK Integration
+    async function onConfigChange(newConfig) {
+      config = { ...defaultConfig, ...newConfig };
+      
+      // Update platform name
+      const platformNameEl = document.getElementById('platform-name');
+      if (platformNameEl && config.platform_name) {
+        const parts = config.platform_name.match(/^(\w+)(.*)$/);
+        if (parts) {
+          platformNameEl.textContent = parts[1];
+          platformNameEl.nextSibling.textContent = parts[2] || 'OnCro';
+        }
+      }
+      
+      // Update welcome message
+      const welcomeEl = document.getElementById('welcome-msg');
+      if (welcomeEl) {
+        welcomeEl.textContent = config.welcome_message || defaultConfig.welcome_message;
+      }
+      
+      // Update featured title
+      const featuredEl = document.getElementById('featured-title');
+      if (featuredEl) {
+        featuredEl.innerHTML = `<span class="w-1 h-5 bg-red-500 rounded-full"></span>${config.featured_section_title || defaultConfig.featured_section_title}`;
+      }
+    }
+    
+    function mapToCapabilities(cfg) {
+      return {
+        recolorables: [
+          {
+            get: () => cfg.background_color || defaultConfig.background_color,
+            set: (v) => { cfg.background_color = v; if (window.elementSdk) window.elementSdk.setConfig({ background_color: v }); }
+          },
+          {
+            get: () => cfg.surface_color || defaultConfig.surface_color,
+            set: (v) => { cfg.surface_color = v; if (window.elementSdk) window.elementSdk.setConfig({ surface_color: v }); }
+          },
+          {
+            get: () => cfg.text_color || defaultConfig.text_color,
+            set: (v) => { cfg.text_color = v; if (window.elementSdk) window.elementSdk.setConfig({ text_color: v }); }
+          },
+          {
+            get: () => cfg.primary_color || defaultConfig.primary_color,
+            set: (v) => { cfg.primary_color = v; if (window.elementSdk) window.elementSdk.setConfig({ primary_color: v }); }
+          },
+          {
+            get: () => cfg.secondary_text_color || defaultConfig.secondary_text_color,
+            set: (v) => { cfg.secondary_text_color = v; if (window.elementSdk) window.elementSdk.setConfig({ secondary_text_color: v }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: undefined,
+        fontSizeable: undefined
+      };
+    }
+    
+    function mapToEditPanelValues(cfg) {
+      return new Map([
+        ['platform_name', cfg.platform_name || defaultConfig.platform_name],
+        ['welcome_message', cfg.welcome_message || defaultConfig.welcome_message],
+        ['featured_section_title', cfg.featured_section_title || defaultConfig.featured_section_title]
+      ]);
+    }
+    
+    // Search functionality
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    const searchResultsContainer = document.getElementById('search-results-container');
+    const popularSearches = document.getElementById('popular-searches');
+    
+    function performSearch(query) {
+      const lowerQuery = query.toLowerCase().trim();
+      
+      if (!lowerQuery) {
+        searchResults.classList.add('hidden');
+        popularSearches.classList.remove('hidden');
+        return;
+      }
+      
+      popularSearches.classList.add('hidden');
+      searchResults.classList.remove('hidden');
+      
+      const results = [];
+      
+      // Search through all games
+      Object.keys(gameData).forEach(gameId => {
+        const game = gameData[gameId];
+        const searchableText = `
+          ${game.title}
+          ${game.description}
+          ${game.tags.map(t => t.text).join(' ')}
+          ${game.features.join(' ')}
+          ${game.project}
+          ${game.genres ? game.genres.join(' ') : ''}
+          ${game.monetization ? game.monetization.join(' ') : ''}
+        `.toLowerCase();
+        
+        if (searchableText.includes(lowerQuery)) {
+          results.push({ type: 'game', id: gameId, game });
+        }
+      });
+      
+      // Search through news articles
+      const newsItems = userData.filter(item => item.settingType === 'news');
+      newsItems.forEach(newsItem => {
+        const searchableText = `
+          ${newsItem.newsTitle}
+          ${newsItem.newsDescription}
+        `.toLowerCase();
+        
+        if (searchableText.includes(lowerQuery)) {
+          results.push({ type: 'news', newsItem });
+        }
+      });
+      
+      // Render results
+      if (results.length === 0) {
+        searchResultsContainer.innerHTML = `
+          <div class="text-center py-8 text-gray-500">
+            <p>No results found for "${query}"</p>
+            <p class="text-sm mt-1">Try searching for game titles, genres, features, or news</p>
+          </div>
+        `;
+        return;
+      }
+      
+      searchResultsContainer.innerHTML = results.map(result => {
+        if (result.type === 'game') {
+          const game = result.game;
+          const heroContent = game.image 
+            ? `<img src="${game.image}" alt="${game.title}" class="w-full h-full object-cover" loading="lazy" onerror="console.error('Image failed to load:', this.src); this.style.display='none'; this.parentElement.innerHTML='<span class=\\'text-3xl\\'>${game.emoji}</span>';">`
+            : `<span class="text-3xl">${game.emoji}</span>`;
+          
+          return `
+            <div class="game-card rounded-xl p-3 flex items-center gap-3 cursor-pointer" data-game="${result.id}">
+              <div class="w-16 h-16 rounded-lg bg-gradient-to-br ${game.gradient} flex items-center justify-center flex-shrink-0 overflow-hidden">
+                ${heroContent}
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="font-semibold text-sm">${game.title}</h3>
+                <p class="text-xs text-gray-500 truncate">${game.tags[0].text} • ${game.project}</p>
+                <div class="flex items-center gap-1 mt-1">
+                  ${game.tags.slice(0, 2).map(tag => `<span class="px-2 py-0.5 text-xs ${tag.class} rounded-full">${tag.text}</span>`).join('')}
+                </div>
+              </div>
+              <svg class="w-5 h-5 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+          `;
+        } else if (result.type === 'news') {
+          const newsItem = result.newsItem;
+          const date = new Date(newsItem.newsDate);
+          const timeAgo = getTimeAgo(date);
+          const isToday = date.toDateString() === new Date().toDateString();
+          
+          const clickHandler = newsItem.newsLink ? `data-news-link="${newsItem.newsLink}"` : '';
+          
+          return `
+            <div class="game-card rounded-xl p-4 space-y-2 cursor-pointer ${newsItem.newsLink ? 'hover:border-red-500/30' : ''}" ${clickHandler}>
+              <div class="flex items-center gap-2">
+                <span class="text-xl">📰</span>
+                <div class="flex items-center gap-2 text-xs text-gray-500">
+                  <span class="w-2 h-2 ${isToday ? 'bg-red-500' : 'bg-gray-500'} rounded-full"></span>
+                  <span>${timeAgo}</span>
+                </div>
+              </div>
+              <h3 class="font-semibold text-sm">${newsItem.newsTitle}</h3>
+              <p class="text-xs text-gray-400">${newsItem.newsDescription}</p>
+              ${newsItem.newsLink ? '<p class="text-xs text-red-400">Click to read more →</p>' : ''}
+            </div>
+          `;
+        }
+      }).join('');
+      
+      // Add click handlers to search result game cards
+      searchResultsContainer.querySelectorAll('.game-card[data-game]').forEach(card => {
+        card.addEventListener('click', () => {
+          const gameId = card.dataset.game;
+          openGameDetail(gameId);
+        });
+      });
+      
+      // Add click handlers to search result news cards
+      searchResultsContainer.querySelectorAll('.game-card[data-news-link]').forEach(card => {
+        card.addEventListener('click', () => {
+          const newsLink = card.dataset.newsLink;
+          if (newsLink) {
+            window.open(newsLink, '_blank', 'noopener,noreferrer');
+          }
+        });
+      });
+    }
+    
+    // Search input event
+    searchInput.addEventListener('input', (e) => {
+      performSearch(e.target.value);
+    });
+    
+    // Popular search chips
+    document.querySelectorAll('.popular-search-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        searchInput.value = chip.textContent.trim();
+        performSearch(searchInput.value);
+      });
+    });
+    
+    // Initialize SDKs
+    initDataSdk();
+    
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+    
+    // Initialize trending games on page load
+    updateTrendingGames();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9c5535a2e6e7a266',t:'MTc2OTY1Mjc5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
